@@ -1,0 +1,54 @@
+/* Theme: Festive Green (default) */
+:root,
+[data-theme="pink"] {
+  --bg-primary: #f2f8f2;
+  --bg-secondary: #e4f0e4;
+  --bg-gradient: linear-gradient(135deg, #a8d8a0, #7ec88a, #f0d060);
+  --card-bg: rgba(255, 255, 255, 0.96);
+  --text-primary: #1a2e1a;
+  --text-secondary: #5a7a5a;
+  --accent-pink: #2ecc71;
+  --accent-purple: #27ae60;
+  --accent-yellow: #f1c40f;
+  --accent-cyan: #1abc9c;
+  --accent-green: #2ecc71;
+  --border-color: rgba(46, 204, 113, 0.2);
+  --btn-gradient: linear-gradient(135deg, #2ecc71, #27ae60);
+  --btn-text: #fff;
+}
+
+/* Theme: Dark */
+[data-theme="dark"] {
+  --bg-primary: #1a1a2e;
+  --bg-secondary: #16213e;
+  --bg-gradient: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+  --card-bg: rgba(30, 30, 60, 0.95);
+  --text-primary: #e0e0ff;
+  --text-secondary: #a0a0c0;
+  --accent-pink: #ff6b9d;
+  --accent-purple: #c56cf0;
+  --accent-yellow: #ffd32a;
+  --accent-cyan: #7efff5;
+  --accent-green: #67e480;
+  --border-color: rgba(197, 108, 240, 0.3);
+  --btn-gradient: linear-gradient(135deg, #c56cf0, #6c5ce7);
+  --btn-text: #fff;
+}
+
+/* Theme: Pastel */
+[data-theme="pastel"] {
+  --bg-primary: #f5faf5;
+  --bg-secondary: #e8f3e8;
+  --bg-gradient: linear-gradient(135deg, #c8e6c9, #a5d6a7, #ffe082);
+  --card-bg: rgba(255, 255, 255, 0.92);
+  --text-primary: #2e4a2e;
+  --text-secondary: #6a8a6a;
+  --accent-pink: #66bb6a;
+  --accent-purple: #4caf50;
+  --accent-yellow: #fdd835;
+  --accent-cyan: #4db6ac;
+  --accent-green: #66bb6a;
+  --border-color: rgba(102, 187, 106, 0.2);
+  --btn-gradient: linear-gradient(135deg, #66bb6a, #4caf50);
+  --btn-text: #fff;
+}

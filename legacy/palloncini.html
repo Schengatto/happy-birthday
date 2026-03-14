@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Festa di Palloncini 🎈</title>
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4, #ffecd2, #a1c4fd, #c2e9fb);
+  background-size: 400% 400%;
+  animation: bgShift 10s ease infinite;
+  min-height: 100dvh;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+@keyframes bgShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ── START SCREEN ── */
+.start-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  padding: 20px;
+}
+
+.start-card {
+  background: rgba(255,255,255,0.92);
+  border-radius: 28px;
+  padding: 36px 24px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+
+.game-title {
+  font-size: clamp(2rem, 8vw, 2.8rem);
+  font-weight: 900;
+  background: linear-gradient(135deg, #f093fb, #f5576c, #4facfe);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 6px;
+  animation: bounceTitle 1.4s ease infinite alternate;
+  line-height: 1.2;
+}
+
+@keyframes bounceTitle {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-8px); }
+}
+
+.start-subtitle {
+  color: #888;
+  font-size: 0.95rem;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.instructions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 28px;
+  text-align: left;
+}
+
+.instr-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(0,0,0,0.04);
+  border-radius: 12px;
+  padding: 10px 14px;
+}
+
+.instr-emojis { font-size: 1.5rem; white-space: nowrap; line-height: 1; }
+.instr-text   { font-size: 0.88rem; color: #555; }
+.instr-text strong { color: #d63384; }
+
+/* ── BUTTON ── */
+.btn {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 50px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(240,147,251,0.45);
+  transition: transform 0.12s, box-shadow 0.12s;
+  width: 100%;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:active { transform: scale(0.96); }
+
+.btn-green {
+  background: linear-gradient(135deg, #43e97b, #38f9d7);
+  box-shadow: 0 8px 24px rgba(67,233,123,0.4);
+}
+
+/* ── GAME SCREEN ── */
+.game-screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* HUD */
+.hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  gap: 6px;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.hud-score {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #d63384;
+  min-width: 60px;
+}
+
+.hud-level {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.hud-lives {
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+}
+
+.hud-timer {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #6f42c1;
+  min-width: 42px;
+  text-align: right;
+}
+.hud-timer.urgent { color: #dc3545; animation: timerPulse 0.5s ease infinite alternate; }
+
+@keyframes timerPulse {
+  from { transform: scale(1); }
+  to   { transform: scale(1.18); }
+}
+
+/* ARENA */
+.arena {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  touch-action: none;
+}
+
+/* ── BALLOONS ── */
+.balloon {
+  position: absolute;
+  bottom: -90px;
+  line-height: 1;
+  animation: floatUp var(--dur) linear forwards;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  padding: 4px;
+  z-index: 5;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12));
+}
+
+.balloon.popped {
+  pointer-events: none;
+  animation: popBurst 0.3s ease forwards !important;
+}
+
+@keyframes floatUp {
+  0%   { transform: translateY(0)              rotate(0deg); opacity: 1; }
+  25%  { transform: translateY(-25dvh)         rotate(calc(var(--w) * 1deg)); }
+  50%  { transform: translateY(-50dvh)         rotate(0deg); }
+  75%  { transform: translateY(-75dvh)         rotate(calc(var(--w) * -1deg)); }
+  100% { transform: translateY(calc(-100dvh - 150px)) rotate(0deg); opacity: 0.4; }
+}
+
+@keyframes popBurst {
+  0%   { transform: scale(1);   opacity: 1; }
+  40%  { transform: scale(2.2); opacity: 0.85; }
+  100% { transform: scale(0);   opacity: 0; }
+}
+
+/* ── SCORE POPUP ── */
+.score-popup {
+  position: absolute;
+  font-size: 1.3rem;
+  font-weight: 900;
+  pointer-events: none;
+  animation: scoreFloat 0.7s ease forwards;
+  z-index: 20;
+}
+.score-popup.good  { color: #d63384; }
+.score-popup.bad   { color: #dc3545; }
+
+@keyframes scoreFloat {
+  from { transform: translateY(0);    opacity: 1; }
+  to   { transform: translateY(-60px); opacity: 0; }
+}
+
+/* ── OVERLAYS ── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 24px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.overlay-card {
+  background: white;
+  border-radius: 28px;
+  padding: 40px 24px 32px;
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+  animation: cardIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes cardIn {
+  from { transform: translateY(40px) scale(0.85); opacity: 0; }
+  to   { transform: translateY(0)    scale(1);    opacity: 1; }
+}
+
+.overlay-emoji  { font-size: 4rem; display: block; margin-bottom: 10px; }
+.overlay-title  { font-size: 1.7rem; font-weight: 900; color: #d63384; margin-bottom: 6px; }
+.overlay-msg    { color: #888; font-size: 0.95rem; margin-bottom: 16px; line-height: 1.4; }
+.score-label    { color: #aaa; font-size: 0.82rem; margin-bottom: 2px; }
+.score-big      { font-size: 3rem; font-weight: 900; color: #6f42c1; display: block; margin-bottom: 20px; }
+
+/* ── CONFETTI ── */
+.confetti-piece {
+  position: fixed;
+  top: -16px;
+  width: 10px;
+  height: 14px;
+  border-radius: 3px;
+  pointer-events: none;
+  animation: confettiFall var(--dur) linear forwards;
+  animation-delay: var(--delay);
+  z-index: 200;
+  opacity: 0;
+}
+
+@keyframes confettiFall {
+  0%   { transform: translateY(-20px) rotate(0deg);   opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ── START SCREEN ── -->
+  <div v-if="screen === 'start'" class="start-screen">
+    <div class="start-card">
+      <div class="game-title">🎈 Festa di<br>Palloncini!</div>
+      <p class="start-subtitle">Scoppia solo i palloncini di festa.<br>Attenta a quelli cattivi!</p>
+
+      <div class="instructions">
+        <div class="instr-row">
+          <span class="instr-emojis">🎈🎂🎁✨💝🎀</span>
+          <span class="instr-text">Tocca questi <strong>→ +10 punti!</strong></span>
+        </div>
+        <div class="instr-row">
+          <span class="instr-emojis">⛈️🧦🧹💀🐌</span>
+          <span class="instr-text">Evita questi <strong>→ perdi un ❤️</strong></span>
+        </div>
+      </div>
+
+      <button class="btn" @click="startGame">🎊 Inizia la Festa!</button>
+    </div>
+  </div>
+
+  <!-- ── GAME SCREEN ── -->
+  <div v-else-if="screen === 'game'" class="game-screen">
+    <div class="hud">
+      <div class="hud-score">⭐ {{ score }}</div>
+      <div class="hud-level">{{ LEVELS[currentLevel].badge }}</div>
+      <div class="hud-lives">{{ livesStr }}</div>
+      <div class="hud-timer" :class="{ urgent: timeLeft <= 5 }">⏱ {{ timeLeft }}s</div>
+    </div>
+
+    <div class="arena" ref="arenaRef">
+      <!-- Balloons -->
+      <div
+        v-for="b in balloons"
+        :key="b.id"
+        class="balloon"
+        :class="{ popped: b.popped }"
+        :style="{
+          left: b.x + '%',
+          fontSize: b.size + 'rem',
+          '--dur': b.duration + 'ms',
+          '--w': b.wobble,
+        }"
+        @pointerdown.stop.prevent="popBalloon(b)"
+        @animationend="e => onAnimEnd(e, b)"
+      >{{ b.emoji }}</div>
+
+      <!-- Score popups -->
+      <div
+        v-for="p in popups"
+        :key="p.id"
+        class="score-popup"
+        :class="p.good ? 'good' : 'bad'"
+        :style="{ left: p.x + 'px', top: p.y + 'px' }"
+      >{{ p.text }}</div>
+    </div>
+  </div>
+
+  <!-- ── LEVEL COMPLETE ── -->
+  <div v-else-if="screen === 'levelComplete'" class="overlay" style="background: rgba(0,0,0,0.35)">
+    <div class="overlay-card">
+      <span class="overlay-emoji">🌟</span>
+      <div class="overlay-title">Livello {{ currentLevel }} superato!</div>
+      <p class="overlay-msg">Stai andando benissimo, continua così!</p>
+      <div class="score-label">Punteggio</div>
+      <span class="score-big">{{ score }}</span>
+      <button class="btn btn-green" @click="nextLevel">Prossimo livello ✨</button>
+    </div>
+  </div>
+
+  <!-- ── WIN ── -->
+  <template v-else-if="screen === 'win'">
+    <div
+      v-for="c in confetti" :key="c.id"
+      class="confetti-piece"
+      :style="{ left: c.x + '%', '--dur': c.dur + 'ms', '--delay': c.delay + 'ms', background: c.color }"
+    ></div>
+    <div class="overlay">
+      <div class="overlay-card">
+        <span class="overlay-emoji">🎉🎂🎉</span>
+        <div class="overlay-title">Bravissima Eliana!</div>
+        <p class="overlay-msg">Hai completato tutti i livelli della festa! Sei la regina dei palloncini!</p>
+        <div class="score-label">Punteggio finale</div>
+        <span class="score-big">{{ score }}</span>
+        <button class="btn" @click="startGame">🔄 Gioca ancora!</button>
+      </div>
+    </div>
+  </template>
+
+  <!-- ── LOSE ── -->
+  <div v-else-if="screen === 'lose'" class="overlay">
+    <div class="overlay-card">
+      <span class="overlay-emoji">💔</span>
+      <div class="overlay-title">Ops! Riprova!</div>
+      <p class="overlay-msg">I palloncini cattivi hanno vinto questa volta...</p>
+      <div class="score-label">Punteggio</div>
+      <span class="score-big">{{ score }}</span>
+      <button class="btn" @click="startGame">🔄 Riprova!</button>
+    </div>
+  </div>
+
+</div><!-- #app -->
+
+<script>
+const { createApp, ref, computed, onUnmounted } = Vue;
+
+createApp({
+  setup() {
+    const screen       = ref('start');
+    const score        = ref(0);
+    const lives        = ref(3);
+    const currentLevel = ref(0);
+    const balloons     = ref([]);
+    const popups       = ref([]);
+    const timeLeft     = ref(30);
+    const confetti     = ref([]);
+
+    let spawnTimer     = null;
+    let countdownTimer = null;
+    let nextId         = 0;
+    let nextPopupId    = 0;
+
+    const LEVELS = [
+      { badge: 'Livello 1 🌸', interval: 1300, baseDur: 5500, goodRatio: 0.72, time: 30 },
+      { badge: 'Livello 2 🌟', interval: 850,  baseDur: 4200, goodRatio: 0.62, time: 30 },
+      { badge: 'Livello 3 🔥', interval: 620,  baseDur: 3100, goodRatio: 0.55, time: 35 },
+    ];
+
+    const GOOD = ['🎈', '🎂', '🎁', '⭐', '💝', '🎀', '🍭', '🌈', '✨', '🎊'];
+    const BAD  = ['⛈️', '🧦', '💀', '🧹', '🐌', '🌧️'];
+
+    const livesStr = computed(() =>
+      '❤️'.repeat(lives.value) + '🖤'.repeat(Math.max(0, 3 - lives.value))
+    );
+
+    // ── Audio ──────────────────────────────────────────────
+    let audioCtx = null;
+    const getCtx = () => {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      return audioCtx;
+    };
+
+    const playTone = (freq, dur, type = 'sine', vol = 0.25) => {
+      try {
+        const ctx  = getCtx();
+        const osc  = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = type;
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(vol, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+        osc.start();
+        osc.stop(ctx.currentTime + dur + 0.02);
+      } catch (_) {}
+    };
+
+    const playPop = (good) => {
+      if (good) {
+        playTone(880, 0.07, 'sine', 0.3);
+        setTimeout(() => playTone(1200, 0.1, 'sine', 0.2), 55);
+      } else {
+        playTone(200, 0.22, 'sawtooth', 0.38);
+        setTimeout(() => playTone(140, 0.18, 'sawtooth', 0.3), 100);
+      }
+    };
+
+    const playLevelUp = () => {
+      [523, 659, 784, 1047].forEach((f, i) =>
+        setTimeout(() => playTone(f, 0.22, 'sine', 0.28), i * 160)
+      );
+    };
+
+    const playVictory = () => {
+      // Happy Birthday melody
+      const notes = [523, 523, 587, 523, 698, 659, 523, 523, 587, 523, 784, 698];
+      const gaps  = [0.25, 0.25, 0.5, 0.5, 0.5, 1.0, 0.25, 0.25, 0.5, 0.5, 0.5, 1.0];
+      let t = 0;
+      notes.forEach((f, i) => {
+        setTimeout(() => playTone(f, gaps[i] * 0.88, 'sine', 0.3), t * 1000);
+        t += gaps[i] + 0.05;
+      });
+    };
+
+    // ── Game logic ─────────────────────────────────────────
+    const clearTimers = () => {
+      clearInterval(spawnTimer);    spawnTimer = null;
+      clearInterval(countdownTimer); countdownTimer = null;
+    };
+
+    const spawnBalloon = () => {
+      const lvl    = LEVELS[currentLevel.value];
+      const isGood = Math.random() < lvl.goodRatio;
+      const pool   = isGood ? GOOD : BAD;
+      const emoji  = pool[Math.floor(Math.random() * pool.length)];
+      const x      = 8 + Math.random() * 76;
+      const wobble = Math.round((Math.random() - 0.5) * 16);
+      const dur    = lvl.baseDur + Math.round((Math.random() - 0.5) * 1400);
+      const size   = +(2.4 + Math.random() * 0.9).toFixed(2);
+      balloons.value.push({ id: nextId++, emoji, isGood, x, wobble, duration: dur, size, popped: false });
+    };
+
+    const startLevel = (lvl) => {
+      currentLevel.value = lvl;
+      balloons.value     = [];
+      popups.value       = [];
+      timeLeft.value     = LEVELS[lvl].time;
+
+      spawnTimer = setInterval(spawnBalloon, LEVELS[lvl].interval);
+
+      countdownTimer = setInterval(() => {
+        timeLeft.value--;
+        if (timeLeft.value <= 0) {
+          clearTimers();
+          setTimeout(() => {
+            balloons.value = [];
+            popups.value   = [];
+            if (currentLevel.value < LEVELS.length - 1) {
+              playLevelUp();
+              screen.value = 'levelComplete';
+            } else {
+              playVictory();
+              generateConfetti();
+              screen.value = 'win';
+            }
+          }, 600);
+        }
+      }, 1000);
+    };
+
+    const showPopup = (b, good) => {
+      // Approximate position: x% of viewport, near top of arena
+      const vw = window.innerWidth;
+      const px = Math.min(vw - 60, Math.max(10, (b.x / 100) * vw - 20));
+      const py = window.innerHeight * 0.35;
+      const p = {
+        id: nextPopupId++,
+        x: px, y: py,
+        text: good ? '+10 ⭐' : '💔',
+        good,
+      };
+      popups.value.push(p);
+      setTimeout(() => {
+        popups.value = popups.value.filter(x => x.id !== p.id);
+      }, 700);
+    };
+
+    const popBalloon = (b) => {
+      if (b.popped || screen.value !== 'game') return;
+      b.popped = true;
+      playPop(b.isGood);
+
+      if (b.isGood) {
+        score.value += 10;
+        showPopup(b, true);
+      } else {
+        lives.value = Math.max(0, lives.value - 1);
+        showPopup(b, false);
+        if (lives.value <= 0) {
+          clearTimers();
+          setTimeout(() => { balloons.value = []; screen.value = 'lose'; }, 450);
+          return;
+        }
+      }
+
+      setTimeout(() => {
+        balloons.value = balloons.value.filter(x => x.id !== b.id);
+      }, 280);
+    };
+
+    const onAnimEnd = (e, b) => {
+      if (e.animationName === 'floatUp' && !b.popped) {
+        balloons.value = balloons.value.filter(x => x.id !== b.id);
+      }
+    };
+
+    const generateConfetti = () => {
+      const colors = ['#ff79c6','#bd93f9','#50fa7b','#f1fa8c','#8be9fd','#ffb86c','#ff5555'];
+      confetti.value = Array.from({ length: 55 }, (_, i) => ({
+        id:    i,
+        x:     Math.random() * 100,
+        dur:   2200 + Math.random() * 2500,
+        delay: Math.random() * 1200,
+        color: colors[i % colors.length],
+      }));
+    };
+
+    const startGame = () => {
+      score.value    = 0;
+      lives.value    = 3;
+      confetti.value = [];
+      popups.value   = [];
+      clearTimers();
+      balloons.value = [];
+      screen.value   = 'game';
+      startLevel(0);
+    };
+
+    const nextLevel = () => {
+      screen.value = 'game';
+      startLevel(currentLevel.value + 1);
+    };
+
+    onUnmounted(clearTimers);
+
+    return {
+      screen, score, lives, livesStr, currentLevel, balloons, popups,
+      timeLeft, confetti, LEVELS, startGame, popBalloon, onAnimEnd, nextLevel,
+    };
+  }
+}).mount('#app');
+</script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff6b9d"/>
+      <stop offset="100%" style="stop-color:#c44569"/>
+    </linearGradient>
+    <linearGradient id="icing" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#fff5f5"/>
+      <stop offset="100%" style="stop-color:#ffe0e6"/>
+    </linearGradient>
+  </defs>
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="256" fill="url(#bg)"/>
+
+  <!-- Cake base bottom layer -->
+  <rect x="116" y="290" width="280" height="80" rx="16" fill="#f8c291"/>
+  <rect x="116" y="290" width="280" height="20" rx="8" fill="#e77f67"/>
+
+  <!-- Cake middle layer -->
+  <rect x="140" y="230" width="232" height="70" rx="14" fill="#ffeaa7"/>
+  <rect x="140" y="230" width="232" height="18" rx="8" fill="#fdcb6e"/>
+
+  <!-- Cake top layer -->
+  <rect x="168" y="178" width="176" height="62" rx="12" fill="#dfe6e9"/>
+
+  <!-- Icing drips -->
+  <path d="M168 190 Q168 178 180 178 L332 178 Q344 178 344 190 L344 195 Q338 215 330 200 Q322 215 314 198 Q306 218 298 200 Q290 216 282 198 Q274 220 266 200 Q258 215 250 198 Q242 218 234 200 Q226 215 218 198 Q210 218 202 200 Q194 215 186 198 Q178 215 168 195Z" fill="url(#icing)"/>
+
+  <!-- Candle -->
+  <rect x="246" y="128" width="20" height="55" rx="4" fill="#74b9ff"/>
+  <!-- Candle stripe -->
+  <rect x="246" y="140" width="20" height="8" rx="2" fill="#0984e3"/>
+  <rect x="246" y="158" width="20" height="8" rx="2" fill="#0984e3"/>
+
+  <!-- Flame outer -->
+  <ellipse cx="256" cy="112" rx="14" ry="22" fill="#fdcb6e"/>
+  <!-- Flame inner -->
+  <ellipse cx="256" cy="116" rx="7" ry="14" fill="#ffeaa7"/>
+  <!-- Flame core -->
+  <ellipse cx="256" cy="118" rx="3" ry="8" fill="#ffffff"/>
+
+  <!-- Sprinkles on cake -->
+  <rect x="190" y="250" width="12" height="4" rx="2" fill="#e17055" transform="rotate(-30 196 252)"/>
+  <rect x="230" y="260" width="12" height="4" rx="2" fill="#00b894" transform="rotate(20 236 262)"/>
+  <rect x="270" y="248" width="12" height="4" rx="2" fill="#6c5ce7" transform="rotate(-15 276 250)"/>
+  <rect x="310" y="258" width="12" height="4" rx="2" fill="#fdcb6e" transform="rotate(35 316 260)"/>
+  <rect x="160" y="310" width="12" height="4" rx="2" fill="#00b894" transform="rotate(25 166 312)"/>
+  <rect x="210" y="320" width="12" height="4" rx="2" fill="#e17055" transform="rotate(-20 216 322)"/>
+  <rect x="260" y="308" width="12" height="4" rx="2" fill="#6c5ce7" transform="rotate(40 266 310)"/>
+  <rect x="310" y="318" width="12" height="4" rx="2" fill="#fdcb6e" transform="rotate(-30 316 320)"/>
+  <rect x="350" y="310" width="12" height="4" rx="2" fill="#e17055" transform="rotate(15 356 312)"/>
+
+  <!-- Stars / sparkles -->
+  <g fill="#ffffff" opacity="0.9">
+    <polygon points="100,160 104,148 108,160 120,164 108,168 104,180 100,168 88,164" />
+    <polygon points="400,140 403,131 406,140 415,143 406,146 403,155 400,146 391,143" />
+    <polygon points="380,260 383,251 386,260 395,263 386,266 383,275 380,266 371,263" />
+    <polygon points="120,250 123,243 126,250 133,253 126,256 123,263 120,256 113,253" />
+  </g>
+
+  <!-- Heart decorations -->
+  <g fill="#ff6b81" opacity="0.8">
+    <path d="M90,380 C90,374 96,370 100,374 C104,370 110,374 110,380 C110,388 100,396 100,396 C100,396 90,388 90,380Z"/>
+    <path d="M400,370 C400,364 406,360 410,364 C414,360 420,364 420,370 C420,378 410,386 410,386 C410,386 400,378 400,370Z" transform="scale(0.8) translate(88 80)"/>
+  </g>
+</svg>

@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Trova le Coppie 🎀</title>
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --pink:    #ff79c6;
+    --purple:  #bd93f9;
+    --yellow:  #f1fa8c;
+    --cyan:    #8be9fd;
+    --green:   #50fa7b;
+    --bg:      #1a1a2e;
+    --card-bg: #16213e;
+    --card-front: #0f3460;
+    --radius:  14px;
+  }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    width: 100%;
+    max-width: 600px;
+    padding: 16px 20px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .title {
+    font-size: clamp(1.4rem, 5vw, 2rem);
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--pink), var(--purple), var(--yellow));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+  }
+
+  .level-badge {
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    color: white;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 4px 14px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .stat {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 6px 14px;
+    color: white;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .stat span { color: var(--yellow); font-weight: 700; }
+
+  /* ── PROGRESS DOTS ── */
+  .level-dots {
+    display: flex;
+    gap: 8px;
+  }
+
+  .dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.25);
+    transition: all 0.3s;
+  }
+  .dot.done   { background: var(--green);  border-color: var(--green); }
+  .dot.active { background: var(--yellow); border-color: var(--yellow); transform: scale(1.3); }
+
+  /* ── GRID ── */
+  .grid-wrap {
+    width: 100%;
+    max-width: 600px;
+    padding: 12px 16px 20px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .grid {
+    display: grid;
+    gap: clamp(6px, 2vw, 10px);
+    width: 100%;
+  }
+
+  /* columns set inline via style binding */
+
+  /* ── CARD ── */
+  .card-outer {
+    aspect-ratio: 1;
+    perspective: 600px;
+    cursor: pointer;
+  }
+
+  .card-inner {
+    width: 100%; height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+    border-radius: var(--radius);
+  }
+
+  .card-outer.flipped .card-inner,
+  .card-outer.matched .card-inner {
+    transform: rotateY(180deg);
+  }
+
+  .card-face {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius);
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* BACK */
+  .card-back {
+    background: linear-gradient(135deg, var(--purple) 0%, var(--pink) 100%);
+    font-size: clamp(1.2rem, 5vw, 1.8rem);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    border: 2px solid rgba(255,255,255,0.15);
+  }
+
+  /* FRONT */
+  .card-front {
+    background: var(--card-front);
+    transform: rotateY(180deg);
+    font-size: clamp(1.4rem, 6vw, 2.4rem);
+    border: 2px solid rgba(255,255,255,0.12);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  }
+
+  .card-outer.matched .card-front {
+    background: linear-gradient(135deg, #1a472a, #2d6a4f);
+    border-color: var(--green);
+    box-shadow: 0 0 16px rgba(80,250,123,0.4);
+  }
+
+  .card-outer.shake {
+    animation: shake 0.4s ease;
+  }
+
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%      { transform: translateX(-6px); }
+    40%      { transform: translateX(6px); }
+    60%      { transform: translateX(-4px); }
+    80%      { transform: translateX(4px); }
+  }
+
+  .card-outer.matched .card-front::after {
+    content: '✓';
+    position: absolute;
+    bottom: 4px;
+    right: 6px;
+    font-size: 0.65rem;
+    color: var(--green);
+    font-weight: 900;
+  }
+
+  /* ── OVERLAY: level complete / victory ── */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,20,0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    backdrop-filter: blur(6px);
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
+
+  .overlay-card {
+    background: linear-gradient(160deg, #16213e, #1a1a2e);
+    border: 2px solid var(--purple);
+    border-radius: 24px;
+    padding: 32px 28px;
+    max-width: 340px;
+    width: 90%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  @keyframes popIn {
+    from { transform: scale(0.6); opacity:0 }
+    to   { transform: scale(1);   opacity:1 }
+  }
+
+  .overlay-emoji { font-size: 3.5rem; }
+
+  .overlay-title {
+    font-size: 1.6rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--yellow), var(--pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .overlay-sub {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .overlay-stat {
+    display: flex;
+    gap: 20px;
+  }
+
+  .ostat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 12px;
+    padding: 10px 18px;
+  }
+
+  .ostat-val {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--yellow);
+  }
+
+  .ostat-lbl {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .btn {
+    padding: 12px 32px;
+    border-radius: 50px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .btn:active { transform: scale(0.96); }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    color: white;
+    box-shadow: 0 4px 16px rgba(189,147,249,0.4);
+  }
+
+  .btn-primary:hover { box-shadow: 0 6px 22px rgba(189,147,249,0.55); }
+
+  /* ── START SCREEN ── */
+  .start-screen {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 32px 20px;
+    text-align: center;
+  }
+
+  .start-emoji { font-size: 5rem; animation: bounce 1.4s ease-in-out infinite; }
+
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-12px); }
+  }
+
+  .start-title {
+    font-size: clamp(2rem, 7vw, 2.8rem);
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--pink), var(--purple), var(--yellow));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.2;
+  }
+
+  .start-desc {
+    color: rgba(255,255,255,0.65);
+    font-size: 1rem;
+    max-width: 280px;
+    line-height: 1.6;
+  }
+
+  .levels-preview {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .lp {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 6px 12px;
+    color: rgba(255,255,255,0.6);
+    font-size: 0.8rem;
+  }
+
+  /* confetti */
+  .confetti-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 99;
+    overflow: hidden;
+  }
+
+  .confetto {
+    position: absolute;
+    top: -20px;
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    animation: fall linear forwards;
+  }
+
+  @keyframes fall {
+    to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- START SCREEN -->
+  <div v-if="phase === 'start'" class="start-screen">
+    <div class="start-emoji">🎀</div>
+    <div class="start-title">Trova le<br>Coppie!</div>
+    <div class="start-desc">Gira le carte e trova tutte le coppie uguali. Quante mosse ci vuoi?</div>
+    <div class="levels-preview">
+      <div class="lp" v-for="(l, i) in levels" :key="i">
+        Livello {{ i+1 }} · {{ l.pairs }} coppie
+      </div>
+    </div>
+    <button class="btn btn-primary" @click="startGame">Inizia! 🚀</button>
+  </div>
+
+  <!-- GAME -->
+  <template v-else-if="phase === 'game'">
+    <!-- confetti -->
+    <div class="confetti-container">
+      <div
+        v-for="c in confetti" :key="c.id"
+        class="confetto"
+        :style="c.style"
+      ></div>
+    </div>
+
+    <div class="header">
+      <div class="title">Trova le Coppie 🎀</div>
+      <div class="level-dots">
+        <div
+          v-for="(l, i) in levels"
+          :key="i"
+          class="dot"
+          :class="{ done: i < currentLevel, active: i === currentLevel }"
+        ></div>
+      </div>
+      <div class="level-badge">Livello {{ currentLevel + 1 }} — {{ levels[currentLevel].label }}</div>
+      <div class="stats-row">
+        <div class="stat">🔄 Mosse: <span>{{ moves }}</span></div>
+        <div class="stat">✅ Coppie: <span>{{ matchedPairs }}/{{ levels[currentLevel].pairs }}</span></div>
+      </div>
+    </div>
+
+    <div class="grid-wrap">
+      <div class="grid" :style="gridStyle">
+        <div
+          v-for="card in cards"
+          :key="card.id"
+          class="card-outer"
+          :class="{
+            flipped:  card.flipped && !card.matched,
+            matched:  card.matched,
+            shake:    card.shake
+          }"
+          @click="flip(card)"
+        >
+          <div class="card-inner">
+            <div class="card-face card-back">🌸</div>
+            <div class="card-face card-front">{{ card.emoji }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEVEL COMPLETE overlay -->
+    <div v-if="showLevelComplete" class="overlay">
+      <div class="overlay-card">
+        <div class="overlay-emoji">{{ isLastLevel ? '🏆' : '⭐' }}</div>
+        <div class="overlay-title">{{ isLastLevel ? 'Hai vinto!' : 'Livello completato!' }}</div>
+        <div class="overlay-sub" v-if="!isLastLevel">
+          Ottimo lavoro! Sei pronta per il livello {{ currentLevel + 2 }}?
+        </div>
+        <div class="overlay-sub" v-else>
+          Bravissima! Hai completato tutti e 5 i livelli! 🎊
+        </div>
+        <div class="overlay-stat">
+          <div class="ostat">
+            <div class="ostat-val">{{ moves }}</div>
+            <div class="ostat-lbl">Mosse</div>
+          </div>
+          <div class="ostat">
+            <div class="ostat-val">{{ levels[currentLevel].pairs }}</div>
+            <div class="ostat-lbl">Coppie</div>
+          </div>
+        </div>
+        <button class="btn btn-primary" @click="nextLevel" v-if="!isLastLevel">
+          Avanti! →
+        </button>
+        <button class="btn btn-primary" @click="restartGame" v-else>
+          Gioca ancora 🔄
+        </button>
+      </div>
+    </div>
+  </template>
+
+</div>
+
+<script>
+const { createApp, ref, computed } = Vue;
+
+createApp({
+  setup() {
+    // ── Audio ──────────────────────────────────────────────────
+    let audioCtx = null;
+    function getCtx() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      return audioCtx;
+    }
+
+    function playTone(freq, type = 'sine', dur = 0.15, vol = 0.25, delay = 0) {
+      const ctx = getCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = type; osc.frequency.value = freq;
+      const t = ctx.currentTime + delay;
+      gain.gain.setValueAtTime(vol, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      osc.start(t); osc.stop(t + dur);
+    }
+
+    function playFlip() { playTone(660, 'sine', 0.08, 0.15); }
+
+    function playMatch() {
+      playTone(523, 'triangle', 0.12, 0.2, 0);
+      playTone(659, 'triangle', 0.12, 0.2, 0.08);
+      playTone(784, 'triangle', 0.18, 0.2, 0.16);
+    }
+
+    function playWrong() {
+      playTone(200, 'sawtooth', 0.15, 0.18);
+    }
+
+    function playLevelUp() {
+      const notes = [523,587,659,698,784,880];
+      notes.forEach((f, i) => playTone(f, 'triangle', 0.18, 0.22, i * 0.1));
+    }
+
+    function playVictory() {
+      const notes = [523,659,784,1047,784,659,1047];
+      notes.forEach((f, i) => playTone(f, 'triangle', 0.22, 0.25, i * 0.12));
+    }
+
+    // ── Level definitions ─────────────────────────────────────
+    const levels = [
+      { pairs: 3,  cols: 3, label: 'Facile',         emojis: ['🎂','🎈','🎁'] },
+      { pairs: 4,  cols: 4, label: 'Un po\' di più', emojis: ['🌸','🦋','⭐','🍭'] },
+      { pairs: 6,  cols: 4, label: 'Medio',           emojis: ['🐱','🐶','🐸','🦄','🐷','🐻'] },
+      { pairs: 8,  cols: 4, label: 'Difficile',       emojis: ['🍎','🍊','🍋','🍇','🍓','🍒','🥝','🍑'] },
+      { pairs: 10, cols: 5, label: 'Campionessa!',    emojis: ['🚀','🌈','🎠','🎡','🎢','🦁','🐬','🦊','🐙','🦋'] },
+    ];
+
+    // ── State ─────────────────────────────────────────────────
+    const phase        = ref('start');
+    const currentLevel = ref(0);
+    const cards        = ref([]);
+    const moves        = ref(0);
+    const matchedPairs = ref(0);
+    const showLevelComplete = ref(false);
+    const confetti     = ref([]);
+    let   flipped      = [];
+    let   busy         = false;
+
+    const isLastLevel = computed(() => currentLevel.value === levels.length - 1);
+
+    const gridStyle = computed(() => {
+      const cols = levels[currentLevel.value].cols;
+      return { gridTemplateColumns: `repeat(${cols}, 1fr)` };
+    });
+
+    // ── Helpers ───────────────────────────────────────────────
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function buildCards(level) {
+      const emojis = levels[level].emojis;
+      const deck = shuffle([...emojis, ...emojis]);
+      return deck.map((emoji, i) => ({
+        id: i, emoji, flipped: false, matched: false, shake: false
+      }));
+    }
+
+    function spawnConfetti() {
+      const colors = ['#ff79c6','#bd93f9','#f1fa8c','#8be9fd','#50fa7b','#ffb86c','#ff5555'];
+      const pieces = Array.from({ length: 60 }, (_, i) => ({
+        id: i,
+        style: {
+          left: Math.random() * 100 + 'vw',
+          background: colors[Math.floor(Math.random() * colors.length)],
+          width:  (8 + Math.random() * 8) + 'px',
+          height: (8 + Math.random() * 8) + 'px',
+          borderRadius: Math.random() > 0.5 ? '50%' : '2px',
+          animationDuration: (1.5 + Math.random() * 2) + 's',
+          animationDelay:    (Math.random() * 0.5) + 's',
+        }
+      }));
+      confetti.value = pieces;
+      setTimeout(() => { confetti.value = []; }, 3500);
+    }
+
+    // ── Game logic ────────────────────────────────────────────
+    function startGame() {
+      currentLevel.value = 0;
+      loadLevel(0);
+      phase.value = 'game';
+    }
+
+    function loadLevel(level) {
+      cards.value = buildCards(level);
+      moves.value = 0;
+      matchedPairs.value = 0;
+      showLevelComplete.value = false;
+      flipped = [];
+      busy = false;
+    }
+
+    function flip(card) {
+      if (busy || card.flipped || card.matched) return;
+      playFlip();
+      card.flipped = true;
+      flipped.push(card);
+
+      if (flipped.length === 2) {
+        busy = true;
+        moves.value++;
+        const [a, b] = flipped;
+        if (a.emoji === b.emoji) {
+          // Match!
+          setTimeout(() => {
+            a.matched = true; b.matched = true;
+            matchedPairs.value++;
+            playMatch();
+            flipped = [];
+            busy = false;
+            if (matchedPairs.value === levels[currentLevel.value].pairs) {
+              setTimeout(() => {
+                spawnConfetti();
+                isLastLevel.value ? playVictory() : playLevelUp();
+                showLevelComplete.value = true;
+              }, 400);
+            }
+          }, 300);
+        } else {
+          // No match
+          setTimeout(() => {
+            playWrong();
+            a.shake = true; b.shake = true;
+            setTimeout(() => {
+              a.flipped = false; b.flipped = false;
+              a.shake = false;   b.shake = false;
+              flipped = [];
+              busy = false;
+            }, 400);
+          }, 600);
+        }
+      }
+    }
+
+    function nextLevel() {
+      currentLevel.value++;
+      loadLevel(currentLevel.value);
+    }
+
+    function restartGame() {
+      phase.value = 'start';
+    }
+
+    return {
+      phase, levels, currentLevel, cards, moves, matchedPairs,
+      showLevelComplete, isLastLevel, gridStyle, confetti,
+      startGame, flip, nextLevel, restartGame,
+    };
+  }
+}).mount('#app');
+</script>
+</body>
+</html>

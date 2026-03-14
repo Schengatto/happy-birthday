@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Missione di Compleanno di Eliana 🎉</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────── */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, cursive, sans-serif;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4, #ffecd2, #a1c4fd, #c2e9fb);
+      background-size: 400% 400%;
+      animation: bgShift 12s ease infinite;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 16px;
+    }
+
+    @keyframes bgShift {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* ─── Card Container ───────────────────────────────── */
+    .card {
+      background: rgba(255,255,255,0.93);
+      border-radius: 28px;
+      padding: 36px 28px;
+      max-width: 560px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      margin-top: 24px;
+      position: relative;
+    }
+
+    /* ─── Typography ───────────────────────────────────── */
+    h1 {
+      font-size: clamp(1.4rem, 5vw, 2rem);
+      color: #d63384;
+      margin-bottom: 14px;
+      animation: bounce 1.4s ease infinite alternate;
+      line-height: 1.3;
+    }
+
+    h2 {
+      font-size: clamp(1.1rem, 4vw, 1.5rem);
+      color: #6f42c1;
+      margin-bottom: 12px;
+    }
+
+    p {
+      color: #555;
+      line-height: 1.7;
+      margin-bottom: 18px;
+      font-size: 1rem;
+    }
+
+    /* ─── Button ───────────────────────────────────────── */
+    .btn {
+      background: linear-gradient(135deg, #f093fb, #f5576c);
+      color: white;
+      border: none;
+      padding: 14px 36px;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 6px 20px rgba(240,147,251,0.45);
+      margin-top: 8px;
+    }
+    .btn:hover  { transform: translateY(-3px) scale(1.05); box-shadow: 0 10px 28px rgba(240,147,251,0.55); }
+    .btn:active { transform: scale(0.97); }
+
+    /* ─── Level Dots ────────────────────────────────────── */
+    .level-dots {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .dot {
+      width: 13px; height: 13px;
+      border-radius: 50%;
+      background: #ddd;
+      transition: background 0.4s;
+    }
+    .dot.active { background: #f5576c; }
+    .dot.done   { background: #20c997; }
+
+    /* ─── Keyframes ─────────────────────────────────────── */
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to   { transform: translateY(-8px); }
+    }
+
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(-6deg) scale(1); }
+      50%       { transform: rotate(6deg) scale(1.05); }
+    }
+
+    @keyframes popIn {
+      from { transform: translate(-50%, -50%) scale(0.4); opacity: 0; }
+      to   { transform: translate(-50%, -50%) scale(1);   opacity: 1; }
+    }
+
+    @keyframes fall {
+      from { top: -70px; }
+      to   { top: 110%;  }
+    }
+
+    @keyframes rainbow {
+      0%   { color: #f5576c; }
+      20%  { color: #f093fb; }
+      40%  { color: #4facfe; }
+      60%  { color: #43e97b; }
+      80%  { color: #ffd200; }
+      100% { color: #f5576c; }
+    }
+
+    @keyframes cakePulse {
+      from { transform: scale(1); }
+      to   { transform: scale(1.12); }
+    }
+
+    @keyframes floatUp {
+      from { bottom: -80px; opacity: 1; }
+      to   { bottom: 110vh; opacity: 0.5; }
+    }
+
+    /* ─── Level 1 ───────────────────────────────────────── */
+    .objects-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin: 24px 0;
+    }
+
+    .emoji-obj {
+      font-size: clamp(2.2rem, 9vw, 3.2rem);
+      cursor: pointer;
+      user-select: none;
+      display: inline-block;
+      animation: wiggle 2.2s ease infinite;
+      transition: opacity 0.4s;
+    }
+    .emoji-obj:hover { filter: drop-shadow(0 0 8px rgba(245,87,108,0.7)); }
+    .emoji-obj.found { opacity: 0.2; pointer-events: none; animation: none; }
+
+    /* ─── Message Popup ─────────────────────────────────── */
+    .msg-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border: 3px solid #f5576c;
+      padding: 18px 32px;
+      border-radius: 20px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+      font-size: 1.15rem;
+      font-weight: bold;
+      color: #333;
+      z-index: 200;
+      animation: popIn 0.3s ease;
+      max-width: 300px;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    /* ─── Level 2 ───────────────────────────────────────── */
+    .score-bar {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #6f42c1;
+      margin-bottom: 8px;
+    }
+
+    .progress-track {
+      background: #eee;
+      border-radius: 10px;
+      height: 14px;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #f093fb, #f5576c);
+      border-radius: 10px;
+      transition: width 0.35s;
+    }
+
+    /* Falling arena */
+    .arena {
+      position: relative;
+      width: 100%;
+      height: 380px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.5);
+      border: 3px dashed #f5576c44;
+      border-radius: 20px;
+    }
+
+    .falling-obj {
+      position: absolute;
+      font-size: clamp(2rem, 8vw, 2.8rem);
+      cursor: pointer;
+      user-select: none;
+      animation: fall linear forwards;
+    }
+    .falling-obj:hover { filter: drop-shadow(0 0 6px rgba(245,87,108,0.8)); }
+
+    /* ─── Level 3 ───────────────────────────────────────── */
+
+    /* Grid of ingredient cards */
+    .ingredient-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      width: 100%;
+      max-width: 380px;
+      margin: 0 auto 20px;
+    }
+
+    .ingredient-card {
+      background: linear-gradient(160deg, #fff8f0, #ffd6a5);
+      border: 3px solid #f5a623;
+      border-radius: 18px;
+      padding: 14px 6px 10px;
+      cursor: pointer;
+      text-align: center;
+      transition: transform 0.15s, border-color 0.2s, background 0.2s, opacity 0.3s, box-shadow 0.2s;
+      user-select: none;
+      box-shadow: 0 3px 10px rgba(245,166,35,0.2);
+    }
+    .ingredient-card:hover {
+      transform: scale(1.1) rotate(-3deg);
+      box-shadow: 0 6px 18px rgba(245,166,35,0.35);
+    }
+    .ingredient-card.used {
+      opacity: 0.22;
+      pointer-events: none;
+      filter: grayscale(0.8);
+    }
+    .ingredient-card.selected {
+      border-color: #6f42c1;
+      background: linear-gradient(160deg, #ede7f6, #b39ddb);
+      transform: scale(1.13) rotate(-3deg);
+      box-shadow: 0 0 0 4px #c084fc55, 0 6px 18px rgba(111,66,193,0.3);
+    }
+    .ingredient-card .ic-emoji {
+      font-size: clamp(1.8rem, 7vw, 2.4rem);
+      display: block;
+      line-height: 1;
+    }
+    .ingredient-card .ic-name {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #444;
+      margin-top: 6px;
+      letter-spacing: 0.3px;
+    }
+
+    /* Bowl zone */
+    .bowl-zone {
+      position: relative;
+      width: 180px;
+      margin: 4px auto 8px;
+      text-align: center;
+      cursor: pointer;
+    }
+    .bowl-emoji-btn {
+      font-size: 5.5rem;
+      line-height: 1;
+      display: block;
+      filter: drop-shadow(0 5px 10px rgba(0,0,0,0.18));
+      transition: transform 0.15s;
+      background: none;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+    }
+    .bowl-emoji-btn:hover { transform: scale(1.1) rotate(-4deg); }
+
+    /* Emoji of added ingredients shown floating above the bowl */
+    .bowl-contents {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 3px;
+      min-height: 28px;
+      margin-bottom: 2px;
+    }
+    .bowl-ing {
+      font-size: 1.5rem;
+      animation: popIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+      display: inline-block;
+    }
+
+    @keyframes bowlShake {
+      0%,100% { transform: rotate(0) scale(1); }
+      20%     { transform: rotate(-9deg) scale(1.08); }
+      50%     { transform: rotate(9deg) scale(1.08); }
+      80%     { transform: rotate(-5deg) scale(1.04); }
+    }
+    .bowl-shaking .bowl-emoji-btn { animation: bowlShake 0.35s ease; }
+
+    .bowl-hint { font-size: 0.9rem; color: #888; margin: 4px 0 8px; min-height: 20px; }
+
+    .l3-msg { color: #d63384; font-weight: bold; margin: 6px 0; min-height: 22px; }
+
+    /* Cake reveal animation */
+    @keyframes cakeAppear {
+      0%   { transform: scale(0.1) rotate(-20deg); opacity: 0; }
+      65%  { transform: scale(1.25) rotate(6deg);  opacity: 1; }
+      100% { transform: scale(1)    rotate(0);     opacity: 1; }
+    }
+    .cake-appear {
+      display: block;
+      animation: cakeAppear 0.7s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    }
+    .cake-sparkles {
+      font-size: 1.6rem;
+      letter-spacing: 5px;
+      animation: bounce 0.9s ease infinite alternate;
+    }
+
+    /* ─── Final Screen ──────────────────────────────────── */
+
+    /* Festive gradient replaces the plain white card background */
+    .card--final {
+      background: linear-gradient(160deg, #fff0fb, #fce4f5, #e8f4ff, #fff8e1);
+      background-size: 300% 300%;
+      animation: bgShift 6s ease infinite, cardFinalIn 0.6s ease;
+      border: 3px solid #f093fb44;
+    }
+
+    @keyframes cardFinalIn {
+      from { transform: scale(0.92); opacity: 0; }
+      to   { transform: scale(1);    opacity: 1; }
+    }
+
+    .final-title {
+      font-size: clamp(1.6rem, 6vw, 2.4rem);
+      animation: rainbow 1.2s linear infinite;
+      margin-bottom: 10px;
+    }
+
+    .big-emoji {
+      font-size: clamp(4rem, 14vw, 6rem);
+      display: block;
+      margin: 16px auto;
+      animation: cakePulse 1.2s ease infinite alternate;
+    }
+
+    .final-msg {
+      font-size: 1.1rem;
+      color: #6f42c1;
+      font-weight: 500;
+      margin: 16px 0;
+    }
+
+    .celebration-row {
+      font-size: 2rem;
+      margin: 16px 0;
+      letter-spacing: 4px;
+      animation: bounce 0.8s ease infinite alternate;
+    }
+
+    /* Balloons overlay */
+    .balloons-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 10;
+      overflow: hidden;
+    }
+    .balloon-item {
+      position: absolute;
+      font-size: 2.6rem;
+      animation: floatUp linear forwards;
+      pointer-events: none;
+    }
+
+    /* Confetti canvas */
+    #confetti-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 300;
+    }
+
+    /* ─── Mobile: card becomes full-screen ─────────────── */
+    @media (max-width: 600px) {
+      body {
+        padding: 0;
+        align-items: stretch;
+      }
+
+      #app {
+        width: 100%;
+        min-height: 100dvh;    /* dvh accounts for mobile browser chrome */
+        display: flex;
+        align-items: stretch;
+      }
+
+      .card {
+        border-radius: 0;
+        margin-top: 0;
+        min-height: 100dvh;
+        padding: 28px 18px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      /* Shrink the falling arena a bit on small screens */
+      .arena {
+        height: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Canvas for confetti particles -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Balloon layer (rendered outside card so they fill screen) -->
+  <div class="balloons-layer" id="balloons-layer"></div>
+
+  <div id="app">
+
+    <!-- ══════════════ START SCREEN ══════════════ -->
+    <div v-if="screen === 'start'" class="card">
+      <h1>La Missione di Compleanno di Eliana 🎉</h1>
+      <p style="font-size: 1.1rem; color: #d63384; font-weight: 600;">🌟 Una festa da preparare… solo per te! 🌟</p>
+      <p>Ciao Eliana! Oggi è il tuo compleanno ma la festa non è pronta.<br>Completa le missioni per prepararla!</p>
+      <button class="btn" @click="startGame">Inizia l'avventura 🚀</button>
+    </div>
+
+    <!-- ══════════════ LEVEL 1 ══════════════ -->
+    <div v-if="screen === 'level1'" class="card">
+      <div class="level-dots">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <h2>🔍 Livello 1 – Trova gli oggetti della festa!</h2>
+      <p>Clicca <strong>solo</strong> gli oggetti che servono per la festa!</p>
+      <p style="font-size:0.9rem; color:#888;">Trovati: {{ l1Found }}/{{ l1Correct.length }}</p>
+
+      <!-- Emoji objects scattered in a grid with random animation delays -->
+      <div class="objects-grid">
+        <span
+          v-for="obj in l1Objects"
+          :key="obj.id"
+          class="emoji-obj"
+          :class="{ found: obj.found }"
+          :style="{ animationDelay: obj.delay + 's' }"
+          @click="clickL1(obj)"
+        >{{ obj.emoji }}</span>
+      </div>
+
+      <!-- Floating feedback message -->
+      <div v-if="l1Msg" class="msg-popup">{{ l1Msg }}</div>
+    </div>
+
+    <!-- ══════════════ LEVEL 2 ══════════════ -->
+    <div v-if="screen === 'level2'" class="card">
+      <div class="level-dots">
+        <div class="dot done"></div>
+        <div class="dot active"></div>
+        <div class="dot"></div>
+      </div>
+      <h2>🎯 Livello 2 – Prendi quello che ami!</h2>
+      <p>Clicca le cose buone, evita quelle brutte!</p>
+
+      <div class="score-bar">
+        <span>⭐ Punteggio: {{ l2Score }}</span>
+        <span>🎯 Obiettivo: 10</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" :style="{ width: Math.max(0, Math.min(100, l2Score * 10)) + '%' }"></div>
+      </div>
+
+      <!-- Falling-objects arena -->
+      <div class="arena">
+        <span
+          v-for="obj in l2Objects"
+          :key="obj.id"
+          class="falling-obj"
+          :style="{ left: obj.x + '%', animationDuration: obj.speed + 's' }"
+          @click.stop="clickL2(obj)"
+          @touchstart.prevent.stop="clickL2(obj)"
+        >{{ obj.emoji }}</span>
+      </div>
+
+      <!-- Score feedback -->
+      <div v-if="l2Msg" class="msg-popup">{{ l2Msg }}</div>
+    </div>
+
+    <!-- ══════════════ LEVEL 3 ══════════════ -->
+    <div v-if="screen === 'level3'" class="card">
+      <div class="level-dots">
+        <div class="dot done"></div>
+        <div class="dot done"></div>
+        <div class="dot active"></div>
+      </div>
+
+      <!-- Before cake is ready: show ingredients + bowl -->
+      <template v-if="!l3CakeReady">
+        <h2>🎂 Livello 3 – Prepara la torta!</h2>
+        <p style="font-size:0.9rem; margin-bottom:12px;">
+          Seleziona un ingrediente, poi clicca la ciotola!
+        </p>
+
+        <!-- Ingredient cards: emoji big on top, name below -->
+        <div class="ingredient-grid">
+          <div
+            v-for="ing in l3Ingredients"
+            :key="ing.name"
+            class="ingredient-card"
+            :class="{ used: ing.used, selected: l3Selected === ing.name }"
+            @click="selectIngredient(ing)"
+          >
+            <span class="ic-emoji">{{ ing.emoji }}</span>
+            <span class="ic-name">{{ ing.name }}</span>
+          </div>
+        </div>
+
+        <!-- Bowl area: added ingredients float above, bowl below -->
+        <div class="bowl-zone" :class="{ 'bowl-shaking': bowlShaking }">
+          <!-- Emoji of ingredients already added, shown above the bowl -->
+          <div class="bowl-contents">
+            <span v-for="(emoji, i) in l3InBowl" :key="i" class="bowl-ing">{{ emoji }}</span>
+          </div>
+          <!-- The bowl itself is the click target -->
+          <button class="bowl-emoji-btn" @click="addToBowl" title="Clicca per aggiungere">🥣</button>
+        </div>
+
+        <!-- Contextual hint line -->
+        <p class="bowl-hint" v-if="l3Selected">
+          Aggiungi <strong>{{ l3Selected }}</strong> alla ciotola ↑
+        </p>
+        <p class="bowl-hint" v-else>
+          Seleziona un ingrediente ({{ l3Added }}/{{ l3Ingredients.length }} aggiunti)
+        </p>
+        <p class="l3-msg">{{ l3Msg }}</p>
+      </template>
+
+      <!-- After all ingredients added: animated cake reveal -->
+      <template v-else>
+        <h2 style="color:#d63384; animation: rainbow 1.5s linear infinite;">🎉 La torta è pronta!</h2>
+        <span class="big-emoji cake-appear">🎂</span>
+        <div class="cake-sparkles">✨🌟💖🌟✨</div>
+        <button class="btn" @click="goToFinal" style="margin-top:16px;">Vai alla festa! 🎊</button>
+      </template>
+    </div>
+
+    <!-- ══════════════ FINAL SCREEN ══════════════ -->
+    <div v-if="screen === 'final'" class="card card--final">
+      <h1 class="final-title">BUON COMPLEANNO ELIANA 🎂</h1>
+
+      <!-- Candles: live or blown out -->
+      <div style="font-size:2.2rem; margin: 8px 0; transition: all 0.6s;">
+        <span v-if="!candlesOut">🕯️🕯️🕯️🕯️🕯️</span>
+        <span v-else>💨💨💨</span>
+      </div>
+
+      <span class="big-emoji">{{ candlesOut ? '🎊' : '🎂' }}</span>
+
+      <p class="final-msg">
+        Questo piccolo gioco è solo per dirti quanto sei speciale.<br>
+        <strong>Buon compleanno sorellina!</strong>
+      </p>
+
+      <!-- Blow candles button (disappears after blow) -->
+      <button v-if="!candlesOut" class="btn" @click="blowCandles">
+        Soffia le candeline 💨
+      </button>
+
+      <!-- Post-blow celebration -->
+      <div v-if="candlesOut" class="celebration-row">🎊 🥳 🎉 🥳 🎊</div>
+    </div>
+
+  </div><!-- #app -->
+
+  <script>
+    const { createApp, ref, reactive, onUnmounted } = Vue;
+
+    createApp({
+      setup() {
+
+        /* ────────────────────────────────────────────────────
+         * SCREEN STATE
+         * Possible values: 'start' | 'level1' | 'level2' | 'level3' | 'final'
+         * ──────────────────────────────────────────────────── */
+        const screen = ref('start');
+
+
+        /* ════════════════════════════════════════════════════
+         * AUDIO ENGINE – Web Audio API helpers
+         * One shared AudioContext reused across all sounds.
+         * ════════════════════════════════════════════════════ */
+
+        let audioCtx = null;
+
+        // Lazily create (or resume) the shared AudioContext.
+        // Must be called from inside a user-gesture handler.
+        function getAudioCtx() {
+          const AC = window.AudioContext || window.webkitAudioContext;
+          if (!AC) return null;
+          if (!audioCtx) audioCtx = new AC();
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+          return audioCtx;
+        }
+
+        // ✅ Positive feedback – bright ascending arpeggio (C5 → E5 → G5)
+        function playSuccess() {
+          const ctx = getAudioCtx();
+          if (!ctx) return;
+          const now = ctx.currentTime;
+          [523.25, 659.25, 783.99].forEach((freq, i) => {
+            const osc  = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + i * 0.09);
+            gain.gain.setValueAtTime(0,    now + i * 0.09);
+            gain.gain.linearRampToValueAtTime(0.3, now + i * 0.09 + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.09 + 0.18);
+            osc.start(now + i * 0.09);
+            osc.stop(now  + i * 0.09 + 0.20);
+          });
+        }
+
+        // ❌ Negative feedback – descending "bwonk" (two low square notes)
+        function playError() {
+          const ctx = getAudioCtx();
+          if (!ctx) return;
+          const now = ctx.currentTime;
+          [280, 185].forEach((freq, i) => {
+            const osc  = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(freq, now + i * 0.13);
+            gain.gain.setValueAtTime(0,    now + i * 0.13);
+            gain.gain.linearRampToValueAtTime(0.18, now + i * 0.13 + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.13 + 0.22);
+            osc.start(now + i * 0.13);
+            osc.stop(now  + i * 0.13 + 0.24);
+          });
+        }
+
+
+        /* ════════════════════════════════════════════════════
+         * LEVEL 1 – Find the party objects
+         * ════════════════════════════════════════════════════ */
+
+        const l1Correct = ['🎂', '🎈', '🎁', '🍬'];     // must click these
+        const l1Wrong   = ['🧦', '🧹', '⛈️'];            // distractors
+
+        const l1Found = ref(0);
+        const l1Msg   = ref('');
+        let   l1MsgTimer = null;
+
+        // Build a shuffled array of object descriptors
+        const l1Objects = reactive(
+          [...l1Correct, ...l1Wrong]
+            .sort(() => Math.random() - 0.5)
+            .map((emoji, i) => ({
+              id:        i,
+              emoji,
+              found:     false,
+              isCorrect: l1Correct.includes(emoji),
+              delay:     (Math.random() * 1.5).toFixed(2)   // stagger wiggle
+            }))
+        );
+
+        function showL1Msg(text) {
+          l1Msg.value = text;
+          clearTimeout(l1MsgTimer);
+          l1MsgTimer = setTimeout(() => { l1Msg.value = ''; }, 1600);
+        }
+
+        function clickL1(obj) {
+          if (obj.found) return;
+          if (obj.isCorrect) {
+            playSuccess();
+            obj.found = true;
+            l1Found.value++;
+            showL1Msg('Perfetto! Questo serve per la festa! 🎉');
+            // All correct objects found → advance
+            if (l1Found.value === l1Correct.length) {
+              setTimeout(() => { screen.value = 'level2'; startLevel2(); }, 1400);
+            }
+          } else {
+            playError();
+            showL1Msg('Noo! Questo non serve alla festa 😆');
+          }
+        }
+
+
+        /* ════════════════════════════════════════════════════
+         * LEVEL 2 – Catch what you love (falling objects)
+         * ════════════════════════════════════════════════════ */
+
+        const l2Good = ['🍕', '🎵', '🎬', '✈️', '☕'];
+        const l2Bad  = ['🕷️', '💩', '🦠'];
+
+        const l2Score   = ref(0);
+        const l2Msg     = ref('');
+        const l2Objects = reactive([]);     // currently falling objects
+
+        let l2ObjId     = 0;
+        let l2Spawn     = null;             // setInterval handle
+        let l2MsgTimer  = null;
+
+        function showL2Msg(text) {
+          l2Msg.value = text;
+          clearTimeout(l2MsgTimer);
+          l2MsgTimer = setTimeout(() => { l2Msg.value = ''; }, 700);
+        }
+
+        function spawnL2() {
+          const isGood = Math.random() > 0.38;          // ~62% good
+          const pool   = isGood ? l2Good : l2Bad;
+          const emoji  = pool[Math.floor(Math.random() * pool.length)];
+          const speed  = 2.4 + Math.random() * 2;       // seconds to cross arena
+          const id     = l2ObjId++;
+
+          l2Objects.push({
+            id,
+            emoji,
+            isGood,
+            x: Math.random() * 82,          // horizontal position (%)
+            speed
+          });
+
+          // Auto-remove when the CSS animation ends (+ small buffer)
+          setTimeout(() => {
+            const idx = l2Objects.findIndex(o => o.id === id);
+            if (idx !== -1) l2Objects.splice(idx, 1);
+          }, (speed + 0.4) * 1000);
+        }
+
+        function startLevel2() {
+          l2Score.value = 0;
+          l2Objects.splice(0);
+          clearInterval(l2Spawn);
+          l2Spawn = setInterval(spawnL2, 850);
+        }
+
+        function clickL2(obj) {
+          const idx = l2Objects.findIndex(o => o.id === obj.id);
+          if (idx === -1) return;           // already removed
+          l2Objects.splice(idx, 1);
+
+          if (obj.isGood) {
+            playSuccess();
+            l2Score.value++;
+            showL2Msg('+1 ✨');
+            if (l2Score.value >= 10) {      // goal reached
+              clearInterval(l2Spawn);
+              setTimeout(() => { screen.value = 'level3'; }, 900);
+            }
+          } else {
+            playError();
+            l2Score.value = Math.max(0, l2Score.value - 1);
+            showL2Msg('-1 😬');
+          }
+        }
+
+
+        /* ════════════════════════════════════════════════════
+         * LEVEL 3 – Build the cake (click-to-select + bowl)
+         * ════════════════════════════════════════════════════ */
+
+        const l3Ingredients = reactive([
+          { name: 'farina',     emoji: '🌾', used: false },
+          { name: 'zucchero',   emoji: '🍬', used: false },
+          { name: 'uova',       emoji: '🥚', used: false },
+          { name: 'cioccolato', emoji: '🍫', used: false },
+          { name: 'candeline',  emoji: '🕯️', used: false },
+        ]);
+
+        const l3Added     = ref(0);
+        const l3Selected  = ref('');     // name of selected ingredient
+        const l3CakeReady = ref(false);
+        const l3Msg       = ref('');
+        const l3InBowl    = reactive([]);  // emojis of added ingredients (for visual bowl)
+        const bowlShaking = ref(false);    // triggers shake CSS class
+
+        function selectIngredient(ing) {
+          if (ing.used) return;
+          // Clicking the same ingredient again deselects it
+          l3Selected.value = (l3Selected.value === ing.name) ? '' : ing.name;
+        }
+
+        function shakeBowl() {
+          bowlShaking.value = true;
+          setTimeout(() => { bowlShaking.value = false; }, 380);
+        }
+
+        function addToBowl() {
+          shakeBowl();
+          if (!l3Selected.value) {
+            playError();
+            l3Msg.value = 'Seleziona prima un ingrediente! 👆';
+            setTimeout(() => { l3Msg.value = ''; }, 1500);
+            return;
+          }
+          const ing = l3Ingredients.find(i => i.name === l3Selected.value);
+          if (ing && !ing.used) {
+            playSuccess();
+            ing.used    = true;
+            l3InBowl.push(ing.emoji);    // show emoji inside the bowl
+            l3Added.value++;
+            l3Selected.value = '';
+            l3Msg.value = 'Aggiunto! 🌟';
+            setTimeout(() => { l3Msg.value = ''; }, 900);
+
+            if (l3Added.value === l3Ingredients.length) {
+              // Small delay so the user sees the last ingredient land
+              setTimeout(() => { l3CakeReady.value = true; }, 600);
+            }
+          }
+        }
+
+        /* ════════════════════════════════════════════════════
+         * HAPPY BIRTHDAY MELODY – Web Audio API
+         * Plays the full "Happy Birthday to You" tune using
+         * oscillator nodes; no external audio files needed.
+         * ════════════════════════════════════════════════════ */
+
+        function playHappyBirthday() {
+          const ctx = getAudioCtx();
+          if (!ctx) return;
+
+          // One beat = 0.38 s  →  ~158 BPM (lively birthday tempo)
+          const B = 0.38;
+
+          // Each entry: { f: frequency in Hz (0 = rest), d: duration in seconds }
+          const song = [
+            // "Hap-py Birth-day to you"
+            { f: 392.00, d: 0.75*B }, { f: 392.00, d: 0.25*B },
+            { f: 440.00, d: B },      { f: 392.00, d: B },
+            { f: 523.25, d: B },      { f: 493.88, d: 2*B },
+            { f: 0,      d: 0.4*B },  // rest between phrases
+            // "Hap-py Birth-day to you"
+            { f: 392.00, d: 0.75*B }, { f: 392.00, d: 0.25*B },
+            { f: 440.00, d: B },      { f: 392.00, d: B },
+            { f: 587.33, d: B },      { f: 523.25, d: 2*B },
+            { f: 0,      d: 0.4*B },
+            // "Hap-py Birth-day dear E-lia-na"
+            { f: 392.00, d: 0.75*B }, { f: 392.00, d: 0.25*B },
+            { f: 783.99, d: B },      { f: 659.25, d: B },
+            { f: 523.25, d: B },      { f: 493.88, d: B },
+            { f: 440.00, d: 2*B },
+            { f: 0,      d: 0.4*B },
+            // "Hap-py Birth-day to you"
+            { f: 698.46, d: 0.75*B }, { f: 698.46, d: 0.25*B },
+            { f: 659.25, d: B },      { f: 523.25, d: B },
+            { f: 587.33, d: B },      { f: 523.25, d: 2.5*B },
+          ];
+
+          let t = ctx.currentTime + 0.08; // small lead-in
+
+          for (const note of song) {
+            if (note.f > 0) {
+              const osc  = ctx.createOscillator();
+              const gain = ctx.createGain();
+              osc.connect(gain);
+              gain.connect(ctx.destination);
+
+              osc.type = 'triangle';                      // warmer than square/sawtooth
+              osc.frequency.setValueAtTime(note.f, t);
+
+              // Simple ADSR envelope: quick attack, gentle release
+              gain.gain.setValueAtTime(0, t);
+              gain.gain.linearRampToValueAtTime(0.35, t + 0.02);
+              gain.gain.setValueAtTime(0.35, t + note.d - 0.06);
+              gain.gain.linearRampToValueAtTime(0, t + note.d);
+
+              osc.start(t);
+              osc.stop(t + note.d + 0.01);
+            }
+            t += note.d;
+          }
+        }
+
+
+        /* ════════════════════════════════════════════════════
+         * FINAL SCREEN
+         * ════════════════════════════════════════════════════ */
+
+        const candlesOut = ref(false);
+
+        function goToFinal() {
+          screen.value = 'final';
+          clearInterval(l2Spawn);
+          startConfetti();
+          startBalloons();
+          playHappyBirthday();   // 🎵 start the melody
+        }
+
+        function blowCandles() {
+          candlesOut.value = true;
+          startConfetti(true);         // burst mode
+        }
+
+
+        /* ════════════════════════════════════════════════════
+         * CONFETTI – canvas-based particle animation
+         * ════════════════════════════════════════════════════ */
+
+        let confettiRAF   = null;
+        let confettiParts = [];
+
+        function startConfetti(burst = false) {
+          const canvas = document.getElementById('confetti-canvas');
+          if (!canvas) return;
+          const ctx = canvas.getContext('2d');
+          canvas.width  = window.innerWidth;
+          canvas.height = window.innerHeight;
+
+          const colors = ['#f093fb','#f5576c','#4facfe','#00f2fe','#43e97b','#ffd200','#fc5c7d','#a1c4fd'];
+          const count  = burst ? 180 : 90;
+
+          for (let i = 0; i < count; i++) {
+            confettiParts.push({
+              x:      Math.random() * canvas.width,
+              y:      burst ? (Math.random() * canvas.height) : -20,
+              vx:     (Math.random() - 0.5) * (burst ? 7 : 3),
+              vy:     burst ? -(Math.random() * 9 + 4) : (Math.random() * 2.5 + 1),
+              rot:    Math.random() * 360,
+              rotV:   (Math.random() - 0.5) * 6,
+              w:      Math.random() * 8 + 4,
+              h:      Math.random() * 5 + 3,
+              color:  colors[Math.floor(Math.random() * colors.length)],
+              life:   1,
+              gravity: burst ? 0.22 : 0.03
+            });
+          }
+
+          if (confettiRAF) return;   // already animating; just added particles
+
+          function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Remove dead particles
+            confettiParts = confettiParts.filter(p => p.life > 0 && p.y < canvas.height + 30);
+
+            for (const p of confettiParts) {
+              p.x   += p.vx;
+              p.y   += p.vy;
+              p.vy  += p.gravity;
+              p.rot += p.rotV;
+              p.life -= 0.006;
+
+              ctx.save();
+              ctx.globalAlpha = Math.max(0, p.life);
+              ctx.translate(p.x, p.y);
+              ctx.rotate(p.rot * Math.PI / 180);
+              ctx.fillStyle = p.color;
+              ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+              ctx.restore();
+            }
+
+            if (confettiParts.length > 0) {
+              confettiRAF = requestAnimationFrame(draw);
+            } else {
+              confettiRAF = null;
+              ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+          }
+
+          confettiRAF = requestAnimationFrame(draw);
+        }
+
+
+        /* ════════════════════════════════════════════════════
+         * BALLOONS – DOM-based floating balloons
+         * ════════════════════════════════════════════════════ */
+
+        let balloonTimer = null;
+        const balloonEmojis = ['🎈','🎉','🎊','💖','⭐','🌟','🥳','💜'];
+
+        function startBalloons() {
+          clearInterval(balloonTimer);
+          const layer = document.getElementById('balloons-layer');
+          if (!layer) return;
+
+          balloonTimer = setInterval(() => {
+            if (screen.value !== 'final') { clearInterval(balloonTimer); return; }
+
+            const el = document.createElement('span');
+            el.className = 'balloon-item';
+            el.textContent = balloonEmojis[Math.floor(Math.random() * balloonEmojis.length)];
+            const duration = 4 + Math.random() * 3;
+            el.style.left            = (Math.random() * 90 + 5) + '%';
+            el.style.animationDuration = duration + 's';
+            layer.appendChild(el);
+
+            // Remove balloon element after its animation completes
+            setTimeout(() => { el.remove(); }, duration * 1000 + 200);
+          }, 600);
+        }
+
+
+        /* ════════════════════════════════════════════════════
+         * NAV
+         * ════════════════════════════════════════════════════ */
+
+        function startGame() {
+          screen.value = 'level1';
+        }
+
+
+        /* ────────────────────────────────────────────────────
+         * Cleanup on component unmount
+         * ──────────────────────────────────────────────────── */
+        onUnmounted(() => {
+          clearInterval(l2Spawn);
+          clearInterval(balloonTimer);
+          if (confettiRAF) cancelAnimationFrame(confettiRAF);
+        });
+
+        /* ────────────────────────────────────────────────────
+         * Expose to template
+         * ──────────────────────────────────────────────────── */
+        return {
+          screen,
+          // Level 1
+          l1Objects, l1Found, l1Correct, l1Msg, clickL1,
+          // Level 2
+          l2Objects, l2Score, l2Msg, clickL2,
+          // Level 3
+          l3Ingredients, l3Added, l3Selected, l3CakeReady, l3Msg, l3InBowl, bowlShaking,
+          selectIngredient, addToBowl,
+          // Final
+          candlesOut, blowCandles, goToFinal,
+          // Nav
+          startGame,
+        };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>

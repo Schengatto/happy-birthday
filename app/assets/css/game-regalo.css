@@ -1,0 +1,204 @@
+/* ═══ GameRegalo — Scarta i Regali ═══ */
+
+.regalo-game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  min-height: 60dvh;
+}
+
+/* HUD */
+.regalo-hud {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  padding: 0.5rem 0.8rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md, 0.75rem);
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
+}
+
+.regalo-hud-level {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.regalo-hud-score {
+  font-weight: 700;
+  font-size: 1.1em;
+  color: var(--accent-yellow);
+}
+
+.regalo-hud-timer {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.regalo-hud-timer--warning {
+  color: #e74c3c;
+  animation: pulse 0.5s infinite;
+}
+
+/* Instruction */
+.regalo-instruction {
+  font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+/* Gift grid */
+.regalo-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 4), 1fr);
+  gap: 0.8rem;
+  max-width: 420px;
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.regalo-gift {
+  aspect-ratio: 1;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.regalo-gift-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-md, 0.75rem);
+  border: 3px solid var(--border-color);
+  background: var(--bg-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s, border-color 0.2s, background 0.2s;
+  overflow: hidden;
+}
+
+.regalo-gift:active:not(.regalo-gift--opened) .regalo-gift-inner {
+  transform: scale(0.92);
+  border-color: #e74c3c;
+}
+
+.regalo-gift--shaking .regalo-gift-inner {
+  animation: shake 0.15s;
+}
+
+.regalo-gift--opened .regalo-gift-inner {
+  border-color: var(--accent-yellow);
+  background: rgba(240, 192, 64, 0.15);
+  cursor: default;
+}
+
+/* Wrapped state */
+.regalo-gift-wrapped {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
+  padding: 0.3rem;
+}
+
+.regalo-gift-emoji {
+  font-size: clamp(2rem, 8vw, 3rem);
+  transition: transform 0.1s;
+}
+
+.regalo-gift--shaking .regalo-gift-emoji {
+  transform: rotate(-5deg);
+}
+
+/* Progress bar */
+.regalo-gift-progress {
+  width: 70%;
+  height: 4px;
+  background: var(--border-color);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.regalo-gift-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #e74c3c, #f39c12, #2ecc71);
+  border-radius: 2px;
+  transition: width 0.1s;
+}
+
+/* Surprise state */
+.regalo-gift-surprise {
+  animation: popIn 0.4s ease-out;
+}
+
+.regalo-gift-surprise-emoji {
+  font-size: clamp(2.2rem, 9vw, 3.2rem);
+}
+
+/* Overlay */
+.regalo-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  animation: fadeInScale 0.3s ease-out;
+}
+
+.regalo-overlay-card {
+  background: var(--card-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 1.5rem;
+  padding: 2rem 2.5rem;
+  text-align: center;
+  max-width: 320px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.regalo-overlay-emoji {
+  font-size: 3.5rem;
+  margin-bottom: 0.8rem;
+  animation: bounce 0.6s;
+}
+
+.regalo-overlay-title {
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.4rem;
+}
+
+.regalo-overlay-sub {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.8rem;
+}
+
+.regalo-overlay-score {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--accent-yellow);
+}
+
+@media (max-width: 400px) {
+  .regalo-grid {
+    gap: 0.5rem;
+  }
+}
+
+@media (min-width: 540px) {
+  .regalo-grid {
+    gap: 1rem;
+  }
+}

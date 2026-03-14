@@ -1,0 +1,313 @@
+/* GameCoppie — Memory Card Matching Game */
+
+/* ─── Wrapper ─── */
+.coppie-wrapper {
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 1rem;
+  animation: fadeInScale 0.4s ease;
+}
+
+/* ─── Header ─── */
+.coppie-title {
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: 0.25rem;
+}
+
+.coppie-subtitle {
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.coppie-level-badge {
+  display: inline-block;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--accent-purple);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  padding: 0.2rem 0.75rem;
+  border-radius: var(--radius-full);
+  margin-bottom: 0.75rem;
+}
+
+/* ─── Stats bar ─── */
+.coppie-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.coppie-stats-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.coppie-stats-value {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+/* ─── Card grid ─── */
+.coppie-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 3), 1fr);
+  gap: 0.6rem;
+  justify-items: center;
+  margin-bottom: 1.25rem;
+}
+
+/* ─── Card container ─── */
+.coppie-card {
+  width: 100%;
+  aspect-ratio: 1;
+  max-width: clamp(60px, 18vw, 100px);
+  perspective: 600px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  animation: popIn 0.35s ease both;
+}
+
+/* ─── Card inner (3D flip) ─── */
+.coppie-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.4s ease;
+}
+
+.coppie-card.is-flipped .coppie-card-inner {
+  transform: rotateY(180deg);
+}
+
+/* ─── Card faces ─── */
+.coppie-card-front,
+.coppie-card-back {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border: 2px solid var(--border-color);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Front = face-down (what you see before flipping) */
+.coppie-card-front {
+  background: var(--btn-gradient);
+  font-size: clamp(1.2rem, 5vw, 1.8rem);
+  color: var(--btn-text);
+}
+
+/* Back = face-up (shows the emoji) */
+.coppie-card-back {
+  background: var(--card-bg);
+  transform: rotateY(180deg);
+  font-size: clamp(1.5rem, 7vw, 2.5rem);
+}
+
+/* ─── Matched state ─── */
+.coppie-card.is-matched .coppie-card-inner {
+  transform: rotateY(180deg);
+}
+
+.coppie-card.is-matched .coppie-card-back {
+  border-color: var(--accent-green);
+  box-shadow: 0 0 12px rgba(78, 205, 196, 0.4);
+}
+
+.coppie-card.is-matched {
+  pointer-events: none;
+}
+
+/* Checkmark badge on matched cards */
+.coppie-card-check {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 22px;
+  height: 22px;
+  background: var(--accent-green);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: #fff;
+  animation: popIn 0.3s ease both;
+  z-index: 2;
+  box-shadow: 0 2px 6px rgba(78, 205, 196, 0.4);
+}
+
+/* ─── Shake animation on wrong match ─── */
+.coppie-card.is-shaking .coppie-card-inner {
+  animation: shake 0.4s ease;
+}
+
+.coppie-card.is-shaking .coppie-card-back {
+  border-color: #e74c3c;
+  box-shadow: 0 0 10px rgba(231, 76, 60, 0.35);
+}
+
+/* ─── Disabled state (during check delay) ─── */
+.coppie-grid.is-locked .coppie-card {
+  pointer-events: none;
+}
+
+/* ─── Level complete overlay ─── */
+.coppie-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+  animation: fadeIn 0.3s ease;
+}
+
+.coppie-overlay-card {
+  text-align: center;
+  padding: 32px 36px;
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  border: 2px solid var(--border-color);
+  animation: popIn 0.4s ease;
+  max-width: 90vw;
+}
+
+.coppie-overlay-emoji {
+  font-size: var(--fs-3xl);
+  margin-bottom: 12px;
+}
+
+.coppie-overlay-title {
+  font-size: var(--fs-xl);
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.coppie-overlay-sub {
+  font-size: var(--fs-base);
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.coppie-overlay-stats {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 20px;
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+}
+
+.coppie-overlay-stat-value {
+  display: block;
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* ─── Buttons ─── */
+.coppie-btn {
+  padding: 0.75rem 2rem;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: var(--fs-base);
+  background: var(--btn-gradient);
+  color: var(--btn-text);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.15s;
+}
+
+.coppie-btn:active {
+  transform: scale(0.95);
+}
+
+/* ─── Confetti container ─── */
+.coppie-confetti {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  overflow: hidden;
+}
+
+.coppie-confetti-piece {
+  position: absolute;
+  top: -20px;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  animation: coppie-confetti-fall var(--dur, 2.5s) linear forwards;
+  opacity: 0.85;
+}
+
+@keyframes coppie-confetti-fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100dvh) rotate(var(--rot, 720deg));
+    opacity: 0;
+  }
+}
+
+/* ─── Mobile responsive ─── */
+@media (max-width: 400px) {
+  .coppie-wrapper {
+    padding: 0.75rem;
+  }
+
+  .coppie-grid {
+    gap: 0.4rem;
+  }
+
+  .coppie-card {
+    max-width: clamp(50px, 16vw, 80px);
+  }
+
+  .coppie-overlay-card {
+    padding: 24px 20px;
+  }
+
+  .coppie-overlay-stats {
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 540px) {
+  .coppie-grid {
+    gap: 0.75rem;
+  }
+
+  .coppie-card {
+    max-width: 110px;
+  }
+
+  .coppie-overlay-card {
+    padding: 40px 48px;
+  }
+}
