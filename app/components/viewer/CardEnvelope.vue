@@ -29,7 +29,7 @@ function handleOpen() {
 
 <template>
   <div class="envelope" :class="{ 'envelope-open': opened, 'envelope-ready': mounted }" @click="handleOpen">
-    <div class="envelope-icon">💌</div>
+    <div class="envelope-icon">✉️</div>
     <div class="envelope-text">
       {{ $t('envelope.text', { name: recipientName }) }}
     </div>
