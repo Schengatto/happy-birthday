@@ -9,12 +9,10 @@ import { useLocale } from '~/composables/useLocale'
 
 const { $t } = useLocale()
 
-const LEVEL_LABEL_KEYS = ['sequenza.level1', 'sequenza.level2', 'sequenza.level3']
-
 const props = defineProps<{
   recipientName: string
   recipientGender: RecipientGender
-  theme?: 'pink' | 'dark' | 'pastel'
+  theme?: 'cuoricini' | 'floreale' | 'festivo' | 'classic-light' | 'classic-dark' | 'modern'
 }>()
 
 const emit = defineEmits<{
@@ -22,11 +20,10 @@ const emit = defineEmits<{
   progress: [percent: number]
 }>()
 
-const { playSuccess, playError, playFlip, playLevelUp, playVictory } = useAudio()
+const { playError, playFlip, playVictory } = useAudio()
 
-const currentLevel = ref(0)
 const score = ref(0)
-const phase = ref<'showing' | 'input' | 'levelComplete' | 'win' | 'fail'>('showing')
+const phase = ref<'showing' | 'input' | 'win' | 'fail'>('showing')
 const sequence = ref<number[]>([])
 const playerInput = ref<number[]>([])
 const activeShowIndex = ref(-1)
@@ -35,10 +32,9 @@ const message = ref('')
 
 let showTimer: ReturnType<typeof setTimeout> | null = null
 
-const levelConfig = computed(() => SEQUENZA_LEVELS[currentLevel.value]!)
+const levelConfig = computed(() => SEQUENZA_LEVELS[0]!)
 
-// Use first N emojis as the "buttons" for this level (4 base + more per level)
-const buttonCount = computed(() => Math.min(4 + currentLevel.value, SEQUENZA_EMOJIS.length))
+const buttonCount = computed(() => 4)
 const buttons = computed(() => SEQUENZA_EMOJIS.slice(0, buttonCount.value))
 
 function generateSequence() {
@@ -96,27 +92,14 @@ function handleButtonClick(btnIndex: number) {
     score.value += 10
 
     if (playerInput.value.length === sequence.value.length) {
-      // Completed this sequence
-      if (currentLevel.value < SEQUENZA_LEVELS.length - 1) {
-        phase.value = 'levelComplete'
-        message.value = $t('sequenza.perfect')
-        playLevelUp()
-        emit('progress', Math.round(((currentLevel.value + 1) / SEQUENZA_LEVELS.length) * 100))
+      phase.value = 'win'
+      message.value = ''
+      playVictory()
+      emit('progress', 100)
 
-        showTimer = setTimeout(() => {
-          currentLevel.value++
-          startLevel()
-        }, 2000)
-      } else {
-        phase.value = 'win'
-        message.value = ''
-        playVictory()
-        emit('progress', 100)
-
-        showTimer = setTimeout(() => {
-          emit('complete', score.value)
-        }, 3000)
-      }
+      showTimer = setTimeout(() => {
+        emit('complete', score.value)
+      }, 3000)
     }
   } else {
     playError()
@@ -133,7 +116,7 @@ function handleButtonClick(btnIndex: number) {
 function startLevel() {
   sequence.value = generateSequence()
   playerInput.value = []
-  emit('progress', Math.round((currentLevel.value / SEQUENZA_LEVELS.length) * 100))
+  emit('progress', 0)
   showSequence()
 }
 
@@ -153,7 +136,7 @@ startLevel()
   <div class="sequenza-game">
     <!-- HUD -->
     <div class="sequenza-hud">
-      <span class="sequenza-hud-level">{{ $t(LEVEL_LABEL_KEYS[currentLevel] ?? 'sequenza.level1') }}</span>
+      <span class="sequenza-hud-level">{{ SEQUENZA_LEVELS[0]!.label }}</span>
       <span class="sequenza-hud-score">⭐ {{ score }}</span>
     </div>
 
@@ -192,16 +175,6 @@ startLevel()
       >
         {{ emoji }}
       </button>
-    </div>
-
-    <!-- Level Complete Overlay -->
-    <div v-if="phase === 'levelComplete'" class="sequenza-overlay">
-      <div class="sequenza-overlay-card">
-        <div class="sequenza-overlay-emoji">🎉</div>
-        <div class="sequenza-overlay-title">{{ $t('sequenza.levelDone') }}</div>
-        <div class="sequenza-overlay-sub">{{ $t('sequenza.levelDoneSub') }}</div>
-        <div class="sequenza-overlay-score">{{ $t('sequenza.points') }} {{ score }} ⭐</div>
-      </div>
     </div>
 
     <!-- Win Overlay -->

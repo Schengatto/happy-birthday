@@ -9,12 +9,11 @@ import type { RecipientGender } from '../../../types/card'
 
 const { $t } = useLocale()
 
-const LEVEL_LABEL_KEYS = ['bolle.level1', 'bolle.level2']
 
 const props = defineProps<{
   recipientName: string
   recipientGender: RecipientGender
-  theme?: 'pink' | 'dark' | 'pastel'
+  theme?: 'cuoricini' | 'floreale' | 'festivo' | 'classic-light' | 'classic-dark' | 'modern'
 }>()
 
 const emit = defineEmits<{
@@ -22,15 +21,14 @@ const emit = defineEmits<{
   progress: [percent: number]
 }>()
 
-const { playPop, playSuccess, playError, playLevelUp, playVictory, playFlip } = useAudio()
+const { playPop, playSuccess, playError, playVictory, playFlip } = useAudio()
 
 const COLS = 8
 const MAX_ROWS = 9
 const ROW_H = 0.866
 
-const currentLevel = ref(0)
 const score = ref(0)
-const phase = ref<'playing' | 'shooting' | 'levelComplete' | 'win' | 'lose'>('playing')
+const phase = ref<'playing' | 'shooting' | 'win' | 'lose'>('playing')
 const grid = ref<(string | null)[][]>([])
 const currentEmoji = ref('')
 const nextEmoji = ref('')
@@ -41,7 +39,7 @@ const cellSize = ref(44)
 const shootBubble = ref<{ x: number; y: number; emoji: string; dx: number; dy: number } | null>(null)
 let animFrame: number | null = null
 
-const levelConfig = computed(() => BOLLE_LEVELS[currentLevel.value]!)
+const levelConfig = computed(() => BOLLE_LEVELS[0]!)
 
 function colCount(row: number): number {
   return row % 2 === 1 ? COLS - 1 : COLS
@@ -264,20 +262,10 @@ function placeBubble(row: number, col: number, emoji: string) {
       grid.value = [...grid.value]
 
       if (isGridEmpty()) {
-        if (currentLevel.value < BOLLE_LEVELS.length - 1) {
-          phase.value = 'levelComplete'
-          playLevelUp()
-          emit('progress', Math.round(((currentLevel.value + 1) / BOLLE_LEVELS.length) * 100))
-          setTimeout(() => {
-            currentLevel.value++
-            initGrid()
-          }, 2000)
-        } else {
-          phase.value = 'win'
-          playVictory()
-          emit('progress', 100)
-          setTimeout(() => emit('complete', score.value), 3000)
-        }
+        phase.value = 'win'
+        playVictory()
+        emit('progress', 100)
+        setTimeout(() => emit('complete', score.value), 3000)
       } else {
         phase.value = 'playing'
       }
@@ -433,7 +421,7 @@ onUnmounted(() => {
   <div class="bolle-game">
     <!-- HUD -->
     <div class="bolle-hud">
-      <span class="bolle-hud-level">{{ $t(LEVEL_LABEL_KEYS[currentLevel] ?? 'bolle.level1') }}</span>
+      <span class="bolle-hud-level">{{ BOLLE_LEVELS[0]!.label }}</span>
       <span class="bolle-hud-score">⭐ {{ score }}</span>
     </div>
 
@@ -501,16 +489,6 @@ onUnmounted(() => {
     <!-- Instruction -->
     <div class="bolle-instruction">
       {{ $t('bolle.instruction') }}
-    </div>
-
-    <!-- Level Complete Overlay -->
-    <div v-if="phase === 'levelComplete'" class="bolle-overlay">
-      <div class="bolle-overlay-card">
-        <div class="bolle-overlay-emoji">🎉</div>
-        <div class="bolle-overlay-title">{{ $t('bolle.levelDone') }}</div>
-        <div class="bolle-overlay-sub">{{ $t('bolle.levelDoneSub') }}</div>
-        <div class="bolle-overlay-score">{{ $t('bolle.points') }} {{ score }} ⭐</div>
-      </div>
     </div>
 
     <!-- Win Overlay -->

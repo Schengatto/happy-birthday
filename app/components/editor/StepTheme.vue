@@ -20,9 +20,12 @@ interface ThemeOption {
 }
 
 const themes: ThemeOption[] = [
-  { id: 'pink', labelKey: 'theme.pink', colors: 'linear-gradient(135deg, #ffb6c1, #ff69b4)' },
-  { id: 'dark', labelKey: 'theme.dark', colors: 'linear-gradient(135deg, #1a1a2e, #16213e)' },
-  { id: 'pastel', labelKey: 'theme.pastel', colors: 'linear-gradient(135deg, #fce4ec, #e8eaf6)' },
+  { id: 'cuoricini', labelKey: 'theme.cuoricini', colors: 'linear-gradient(135deg, #ffc1cc, #ff8fa3)' },
+  { id: 'floreale', labelKey: 'theme.floreale', colors: 'linear-gradient(135deg, #f8c8dc, #d4a9e0, #a8d8ea)' },
+  { id: 'festivo', labelKey: 'theme.festivo', colors: 'linear-gradient(135deg, #ffe082, #ffcc02, #ff8a65)' },
+  { id: 'classic-light', labelKey: 'theme.classic-light', colors: 'linear-gradient(135deg, #f5f0e8, #e8dfd3)' },
+  { id: 'classic-dark', labelKey: 'theme.classic-dark', colors: 'linear-gradient(135deg, #1a1a2e, #16213e)' },
+  { id: 'modern', labelKey: 'theme.modern', colors: 'linear-gradient(135deg, #667eea, #764ba2, #f093fb)' },
 ]
 </script>
 

@@ -19,7 +19,7 @@ export interface GameSelection {
 
 export type GameType = 'missione' | 'coppie' | 'palloncini' | 'sequenza' | 'regalo' | 'torta' | 'artiglio' | 'bolle' | 'dolcetti' | 'alchimia'
 
-export type CardTheme = 'pink' | 'dark' | 'pastel'
+export type CardTheme = 'cuoricini' | 'floreale' | 'festivo' | 'classic-light' | 'classic-dark' | 'modern'
 
 export interface StoredCard {
   id: string

@@ -9,8 +9,6 @@ import { useLocale } from '~/composables/useLocale'
 
 const { $t } = useLocale()
 
-const LEVEL_LABEL_KEYS = ['regalo.level1', 'regalo.level2', 'regalo.level3']
-
 interface Gift {
   id: number
   surprise: string
@@ -23,7 +21,7 @@ interface Gift {
 const props = defineProps<{
   recipientName: string
   recipientGender: RecipientGender
-  theme?: 'pink' | 'dark' | 'pastel'
+  theme?: 'cuoricini' | 'floreale' | 'festivo' | 'classic-light' | 'classic-dark' | 'modern'
 }>()
 
 const emit = defineEmits<{
@@ -31,18 +29,17 @@ const emit = defineEmits<{
   progress: [percent: number]
 }>()
 
-const { playFlip, playSuccess, playError, playLevelUp, playVictory } = useAudio()
+const { playFlip, playSuccess, playError, playVictory } = useAudio()
 
-const currentLevel = ref(0)
 const score = ref(0)
 const timeLeft = ref(0)
 const gifts = ref<Gift[]>([])
-const phase = ref<'playing' | 'levelComplete' | 'win' | 'lose'>('playing')
+const phase = ref<'playing' | 'win' | 'lose'>('playing')
 
 let nextId = 0
 let countdownTimer: ReturnType<typeof setInterval> | null = null
 
-const levelConfig = computed(() => REGALO_LEVELS[currentLevel.value]!)
+const levelConfig = computed(() => REGALO_LEVELS[0]!)
 
 function shuffleArray<T>(arr: T[]): T[] {
   const a = [...arr]
@@ -94,24 +91,13 @@ function onAllOpened() {
   // Bonus points for remaining time
   score.value += timeLeft.value * 5
 
-  if (currentLevel.value < REGALO_LEVELS.length - 1) {
-    phase.value = 'levelComplete'
-    playLevelUp()
-    emit('progress', Math.round(((currentLevel.value + 1) / REGALO_LEVELS.length) * 100))
+  phase.value = 'win'
+  playVictory()
+  emit('progress', 100)
 
-    setTimeout(() => {
-      currentLevel.value++
-      startLevel()
-    }, 2000)
-  } else {
-    phase.value = 'win'
-    playVictory()
-    emit('progress', 100)
-
-    setTimeout(() => {
-      emit('complete', score.value)
-    }, 3000)
-  }
+  setTimeout(() => {
+    emit('complete', score.value)
+  }, 3000)
 }
 
 function startLevel() {
@@ -120,7 +106,7 @@ function startLevel() {
   gifts.value = createGifts()
   phase.value = 'playing'
 
-  emit('progress', Math.round((currentLevel.value / REGALO_LEVELS.length) * 100))
+  emit('progress', 0)
 
   countdownTimer = setInterval(() => {
     timeLeft.value--
@@ -161,7 +147,7 @@ onUnmounted(() => {
   <div class="regalo-game">
     <!-- HUD -->
     <div class="regalo-hud">
-      <span class="regalo-hud-level">{{ $t(LEVEL_LABEL_KEYS[currentLevel] ?? 'regalo.level1') }}</span>
+      <span class="regalo-hud-level">{{ REGALO_LEVELS[0]!.label }}</span>
       <span class="regalo-hud-score">💝 {{ score }}</span>
       <span
         class="regalo-hud-timer"
@@ -197,16 +183,6 @@ onUnmounted(() => {
             <span class="regalo-gift-surprise-emoji">{{ gift.surprise }}</span>
           </div>
         </div>
-      </div>
-    </div>
-
-    <!-- Level Complete Overlay -->
-    <div v-if="phase === 'levelComplete'" class="regalo-overlay">
-      <div class="regalo-overlay-card">
-        <div class="regalo-overlay-emoji">🎉</div>
-        <div class="regalo-overlay-title">{{ $t('regalo.levelDone') }}</div>
-        <div class="regalo-overlay-sub">{{ $t('regalo.levelDoneSub') }}</div>
-        <div class="regalo-overlay-score">{{ $t('regalo.points') }} {{ score }} 💝</div>
       </div>
     </div>
 

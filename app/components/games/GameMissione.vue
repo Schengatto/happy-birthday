@@ -16,7 +16,7 @@ const { $t } = useLocale()
 const props = defineProps<{
   recipientName: string
   recipientGender: RecipientGender
-  theme?: 'pink' | 'dark' | 'pastel'
+  theme?: 'cuoricini' | 'floreale' | 'festivo' | 'classic-light' | 'classic-dark' | 'modern'
 }>()
 
 const emit = defineEmits<{

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onUnmounted, nextTick } from 'vue'
+import { ref, computed, onUnmounted } from 'vue'
 import { useAudio } from '~/composables/useAudio'
 import { COPPIE_LEVELS } from '~/utils/emoji-sets'
 import { shuffle } from '~/utils/shuffle'
@@ -14,7 +14,7 @@ const { $t } = useLocale()
 const props = defineProps<{
   recipientName: string
   recipientGender: RecipientGender
-  theme?: 'pink' | 'dark' | 'pastel'
+  theme?: 'cuoricini' | 'floreale' | 'festivo' | 'classic-light' | 'classic-dark' | 'modern'
 }>()
 
 const emit = defineEmits<{
@@ -23,10 +23,7 @@ const emit = defineEmits<{
 }>()
 
 /* ─── Audio ─── */
-const { playFlip, playMatch, playError, playLevelUp } = useAudio()
-
-/* ─── Level labels ─── */
-const LEVEL_LABEL_KEYS = ['coppie.level1', 'coppie.level2', 'coppie.level3']
+const { playFlip, playMatch, playError } = useAudio()
 
 /* ─── Card type ─── */
 interface Card {
@@ -38,11 +35,9 @@ interface Card {
 }
 
 /* ─── Game state ─── */
-const currentLevel = ref(0)
 const cards = ref<Card[]>([])
 const moves = ref(0)
 const pairsFound = ref(0)
-const totalMoves = ref(0)
 const isLocked = ref(false)
 const showOverlay = ref(false)
 const showConfetti = ref(false)
@@ -69,7 +64,7 @@ const CONFETTI_COLORS = ['#ff69b4', '#9b59b6', '#f0e68c', '#87ceeb', '#4ecdc4', 
 let confettiId = 0
 
 /* ─── Computed ─── */
-const levelConfig = computed(() => COPPIE_LEVELS[currentLevel.value]!)
+const levelConfig = computed(() => COPPIE_LEVELS[0]!)
 const totalPairs = computed(() => levelConfig.value.pairs)
 const gridCols = computed(() => levelConfig.value.cols)
 
@@ -96,7 +91,7 @@ function startLevel() {
   pairsFound.value = 0
   cards.value = buildCards()
 
-  emit('progress', Math.round((currentLevel.value / COPPIE_LEVELS.length) * 100))
+  emit('progress', 0)
 }
 
 /* ─── Card click handler ─── */
@@ -144,12 +139,9 @@ function handleMatch() {
     secondCard = null
     isLocked.value = false
 
-    // Emit progress within current level
-    const levelProgress = pairsFound.value / totalPairs.value
-    const overallProgress = Math.round(
-      ((currentLevel.value + levelProgress) / COPPIE_LEVELS.length) * 100,
-    )
-    emit('progress', Math.min(overallProgress, 99))
+    // Emit progress
+    const progress = Math.round((pairsFound.value / totalPairs.value) * 100)
+    emit('progress', Math.min(progress, 99))
 
     // Check if level complete
     if (pairsFound.value >= totalPairs.value) {
@@ -183,10 +175,8 @@ function handleMismatch() {
   }, 600)
 }
 
-/* ─── Level complete ─── */
+/* ─── Game complete ─── */
 function onLevelComplete() {
-  totalMoves.value += moves.value
-
   // Spawn confetti
   spawnConfetti()
 
@@ -218,19 +208,11 @@ function spawnConfetti() {
   }, 3500)
 }
 
-/* ─── Next level / complete ─── */
+/* ─── Complete ─── */
 function nextLevel() {
   showOverlay.value = false
-
-  if (currentLevel.value < COPPIE_LEVELS.length - 1) {
-    currentLevel.value++
-    playLevelUp()
-    nextTick(() => startLevel())
-  } else {
-    // All levels done
-    emit('progress', 100)
-    emit('complete', totalMoves.value)
-  }
+  emit('progress', 100)
+  emit('complete', moves.value)
 }
 
 /* ─── Cleanup ─── */
@@ -248,13 +230,6 @@ startLevel()
 
 <template>
   <div class="coppie-wrapper">
-    <!-- Level badge -->
-    <div style="text-align: center">
-      <span class="coppie-level-badge">
-        {{ $t('coppie.levelBadge', { current: currentLevel + 1, total: COPPIE_LEVELS.length, label: $t(LEVEL_LABEL_KEYS[currentLevel] ?? 'coppie.level1') }) }}
-      </span>
-    </div>
-
     <h2 class="coppie-title">{{ $t('coppie.title') }}</h2>
     <p class="coppie-subtitle">
       {{ $t('coppie.subtitle', { name: props.recipientName }) }}
@@ -278,7 +253,7 @@ startLevel()
     >
       <div
         v-for="card in cards"
-        :key="`${currentLevel}-${card.id}`"
+        :key="card.id"
         class="coppie-card"
         :class="{
           'is-flipped': card.flipped || card.matched,
@@ -300,17 +275,15 @@ startLevel()
       </div>
     </div>
 
-    <!-- Level complete overlay -->
+    <!-- Complete overlay -->
     <div v-if="showOverlay" class="coppie-overlay">
       <div class="coppie-overlay-card">
-        <div class="coppie-overlay-emoji">
-          {{ currentLevel < COPPIE_LEVELS.length - 1 ? '🎉' : '🏆' }}
-        </div>
+        <div class="coppie-overlay-emoji">🏆</div>
         <div class="coppie-overlay-title">
-          {{ currentLevel < COPPIE_LEVELS.length - 1 ? $t('coppie.levelDone') : $t('coppie.allDone.' + props.recipientGender, { name: props.recipientName }) }}
+          {{ $t('coppie.allDone.' + props.recipientGender, { name: props.recipientName }) }}
         </div>
         <div class="coppie-overlay-sub">
-          {{ currentLevel < COPPIE_LEVELS.length - 1 ? $t('coppie.levelDoneSub') : $t('coppie.allDoneSub') }}
+          {{ $t('coppie.allDoneSub') }}
         </div>
         <div class="coppie-overlay-stats">
           <div>
@@ -323,7 +296,7 @@ startLevel()
           </div>
         </div>
         <button class="coppie-btn" @click="nextLevel">
-          {{ currentLevel < COPPIE_LEVELS.length - 1 ? $t('coppie.nextLevel') : $t('coppie.continue') }}
+          {{ $t('coppie.continue') }}
         </button>
       </div>
     </div>

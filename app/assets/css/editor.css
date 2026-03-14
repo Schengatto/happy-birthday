@@ -7,6 +7,24 @@
   background-size: 400% 400%;
   animation: bgShift 12s ease infinite;
   overflow: hidden;
+  position: relative;
+}
+
+.layout-default::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: var(--bg-pattern);
+  background-size: var(--bg-pattern-size);
+  background-repeat: repeat;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.35;
+}
+
+.layout-default > * {
+  position: relative;
+  z-index: 1;
 }
 
 .layout-header {

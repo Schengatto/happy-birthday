@@ -65,9 +65,12 @@ const it: Messages = {
   /* ─── Editor: StepTheme ─── */
   'theme.title': 'Scegli il tema',
   'theme.subtitle': 'Personalizza il look del tuo biglietto',
-  'theme.pink': 'Rosa',
-  'theme.dark': 'Scuro',
-  'theme.pastel': 'Pastello',
+  'theme.cuoricini': 'Cuoricini',
+  'theme.floreale': 'Floreale',
+  'theme.festivo': 'Festivo',
+  'theme.classic-light': 'Classico Chiaro',
+  'theme.classic-dark': 'Classico Scuro',
+  'theme.modern': 'Moderno',
 
   /* ─── Editor: StepPreview ─── */
   'preview.title': 'Anteprima',
@@ -117,6 +120,7 @@ const it: Messages = {
   'finale.message.M': 'Hai completato tutte le sfide! Sei fantastico! 🌟',
   'finale.message.F': 'Hai completato tutte le sfide! Sei fantastica! 🌟',
   'finale.blow': 'Soffia le candeline 💨',
+  'finale.createYours': 'Crea anche tu un biglietto di auguri!',
 
   /* ─── Viewer: GameCarousel ─── */
   'carousel.missione': '🎯 Prepara la Festa',
@@ -370,9 +374,12 @@ const en: Messages = {
   /* ─── Editor: StepTheme ─── */
   'theme.title': 'Choose a theme',
   'theme.subtitle': 'Customize the look of your card',
-  'theme.pink': 'Pink',
-  'theme.dark': 'Dark',
-  'theme.pastel': 'Pastel',
+  'theme.cuoricini': 'Hearts',
+  'theme.floreale': 'Floral',
+  'theme.festivo': 'Festive',
+  'theme.classic-light': 'Classic Light',
+  'theme.classic-dark': 'Classic Dark',
+  'theme.modern': 'Modern',
 
   /* ─── Editor: StepPreview ─── */
   'preview.title': 'Preview',
@@ -422,6 +429,7 @@ const en: Messages = {
   'finale.message.M': 'You completed all the challenges! You\'re amazing! 🌟',
   'finale.message.F': 'You completed all the challenges! You\'re amazing! 🌟',
   'finale.blow': 'Blow the candles 💨',
+  'finale.createYours': 'Create your own birthday card!',
 
   /* ─── Viewer: GameCarousel ─── */
   'carousel.missione': '🎯 Prepare the Party',

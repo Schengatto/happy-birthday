@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  const validThemes = ['pink', 'dark', 'pastel']
+  const validThemes = ['cuoricini', 'floreale', 'festivo', 'classic-light', 'classic-dark', 'modern']
   if (!validThemes.includes(body.theme)) {
     throw createError({ statusCode: 400, statusMessage: 'Tema non valido' })
   }

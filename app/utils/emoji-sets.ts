@@ -25,9 +25,7 @@ export const MISSIONE_TAVOLO = [
 
 // Abbina le cose per la tavola della festa
 export const COPPIE_LEVELS = [
-  { pairs: 3, cols: 3, label: 'Piatti e Bicchieri', emojis: ['🍽️', '🥤', '🎈'] },
-  { pairs: 5, cols: 5, label: 'Le Decorazioni', emojis: ['🎀', '🕯️', '🎵', '🎁', '🧁'] },
-  { pairs: 8, cols: 4, label: 'La Festa Completa!', emojis: ['🍽️', '🥤', '🎈', '🎀', '🕯️', '🎵', '🎁', '🧁'] },
+  { pairs: 6, cols: 4, label: 'Trova le Coppie!', emojis: ['🍽️', '🥤', '🎈', '🎀', '🕯️', '🎵'] },
 ]
 
 // ═══ MISSIONE 3: Decora la Sala ═══
@@ -47,8 +45,7 @@ export const BALLOON_EMOJIS = ['🎈', '🎉', '🎊', '💖', '⭐', '🌟', '�
 export const SEQUENZA_EMOJIS = ['🎂', '🎈', '🎁', '🎀', '🧁', '🌟', '🎵', '🍬']
 
 export const SEQUENZA_LEVELS = [
-  { length: 3, label: 'Facile 🌸', showTime: 800 },
-  { length: 5, label: 'Medio 🌟', showTime: 650 },
+  { length: 4, label: 'Ricorda la Sequenza 🌸', showTime: 750 },
 ]
 
 // ═══ MISSIONE 5: Scarta i Regali ═══
@@ -60,9 +57,7 @@ export const REGALO_WRAPS = ['🎁', '🎁', '🎁', '🎁']
 export const REGALO_SURPRISES = ['🧸', '🎮', '📱', '💎', '🎨', '🍫', '🧁', '👑', '🌺', '💝', '🎵', '⭐']
 
 export const REGALO_LEVELS = [
-  { gifts: 4, tapsToOpen: 5, timeLimit: 20, label: 'Primi Regali 🎀' },
-  { gifts: 6, tapsToOpen: 7, timeLimit: 25, label: 'Tanti Regali 🎊' },
-  { gifts: 8, tapsToOpen: 8, timeLimit: 30, label: 'La Montagna di Regali! 🏔️' },
+  { gifts: 5, tapsToOpen: 5, timeLimit: 25, label: 'Scarta i Regali 🎁' },
 ]
 
 // ═══ MISSIONE 6: Scoppia le Bolle ═══
@@ -71,8 +66,7 @@ export const REGALO_LEVELS = [
 export const BOLLE_EMOJIS = ['🎂', '🎈', '🎁', '🧁', '⭐', '🎀']
 
 export const BOLLE_LEVELS = [
-  { rows: 4, emojiCount: 4, label: 'Bolle Facili 🫧' },
-  { rows: 6, emojiCount: 5, label: 'Bolle Pazze! 🌊' },
+  { rows: 4, emojiCount: 4, label: 'Scoppia le Bolle 🫧' },
 ]
 
 // ═══ MISSIONE 7: Prepara la Torta ═══
@@ -110,9 +104,7 @@ export const ARTIGLIO_BAD = ['🧅', '🌶️']
 
 // Claw speed increases per round (px per frame, grab count needed)
 export const ARTIGLIO_ROUNDS = [
-  { speed: 0.6, catchTarget: 1, label: 'Riscaldamento 🌸' },
-  { speed: 0.9, catchTarget: 1, label: 'Velocità! 🌟' },
-  { speed: 1.2, catchTarget: 1, label: 'Gran Finale! 🔥' },
+  { speed: 0.8, catchTarget: 2, label: 'Acchiappa i Dolcetti 🍬' },
 ]
 
 // ═══ MISSIONE 9: Alchimia della Torta ═══

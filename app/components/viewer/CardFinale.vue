@@ -82,28 +82,45 @@ onUnmounted(() => {
     </div>
 
     <div class="finale-content">
-      <div class="finale-candles">
-        <span v-if="!candlesOut">🕯️🕯️🕯️🕯️🕯️</span>
-        <span v-else>💨💨💨</span>
+      <!-- Decorative top sparkles -->
+      <div class="finale-sparkles">✨ 🌟 ✨</div>
+
+      <div class="finale-cake-area">
+        <div class="finale-candles">
+          <span v-if="!candlesOut">🕯️🕯️🕯️🕯️🕯️</span>
+          <span v-else class="finale-puffs">💨💨💨</span>
+        </div>
+        <div class="finale-cake">{{ candlesOut ? '🎊' : '🎂' }}</div>
       </div>
 
-      <div class="finale-cake">{{ candlesOut ? '🎊' : '🎂' }}</div>
+      <div class="finale-card">
+        <div class="finale-title">
+          {{ $t('finale.title', { name: recipientName.toUpperCase() }) }}
+        </div>
 
-      <div class="finale-title">
-        {{ $t('finale.title', { name: recipientName.toUpperCase() }) }}
+        <div class="finale-divider">🎀</div>
+
+        <div class="finale-message">
+          {{ $t('finale.message.' + recipientGender) }}
+        </div>
+
+        <button v-if="!candlesOut" class="btn btn-primary finale-blow-btn" @click="blowCandles">
+          {{ $t('finale.blow') }}
+        </button>
+
+        <div v-if="candlesOut" class="finale-celebration">
+          🎊 🥳 🎉 🥳 🎊
+        </div>
       </div>
 
-      <div class="finale-message">
-        {{ $t('finale.message.' + recipientGender) }}
-      </div>
+      <!-- Decorative bottom sparkles -->
+      <div class="finale-sparkles finale-sparkles--bottom">🎉 💖 🎉</div>
 
-      <button v-if="!candlesOut" class="btn btn-primary finale-blow-btn" @click="blowCandles">
-        {{ $t('finale.blow') }}
-      </button>
-
-      <div v-if="candlesOut" class="finale-celebration">
-        🎊 🥳 🎉 🥳 🎊
-      </div>
     </div>
+
+    <!-- Create your own card link -->
+    <a href="/" class="finale-create-link">
+      🎂 {{ $t('finale.createYours') }}
+    </a>
   </div>
 </template>

@@ -23,11 +23,11 @@ const stepLabels = computed(() => [
 ])
 
 const recipientName = ref('')
-const recipientGender = ref<RecipientGender>('M')
+const recipientGender = ref<RecipientGender>('F')
 const senderName = ref('')
 const message = ref('')
 const selectedGames = ref<GameType[]>([])
-const selectedTheme = ref<CardTheme>('pink')
+const selectedTheme = ref<CardTheme>('cuoricini')
 
 const config = computed<CardConfig>(() => ({
   v: 1,

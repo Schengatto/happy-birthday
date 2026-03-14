@@ -12,7 +12,7 @@ const { $t } = useLocale()
 const props = defineProps<{
   recipientName: string
   recipientGender: RecipientGender
-  theme?: 'pink' | 'dark' | 'pastel'
+  theme?: 'cuoricini' | 'floreale' | 'festivo' | 'classic-light' | 'classic-dark' | 'modern'
 }>()
 
 const emit = defineEmits<{
@@ -20,13 +20,12 @@ const emit = defineEmits<{
   progress: [percent: number]
 }>()
 
-const { playSuccess, playError, playLevelUp, playVictory, playPop } = useAudio()
+const { playSuccess, playError, playVictory, playPop } = useAudio()
 
 // Game state
-const currentRound = ref(0)
 const totalCaught = ref(0)
 const attemptsLeft = ref(5)
-const phase = ref<'playing' | 'dropping' | 'grabbing' | 'returning' | 'roundComplete' | 'win' | 'lose'>('playing')
+const phase = ref<'playing' | 'dropping' | 'grabbing' | 'returning' | 'win' | 'lose'>('playing')
 const clawX = ref(50) // percentage 0-100 (horizontal position)
 const clawDirection = ref(1) // 1 = right, -1 = left
 const clawDrop = ref(0) // percentage 0-100 of the drop zone height
@@ -37,8 +36,8 @@ let animFrame: number | null = null
 let dropTimer: ReturnType<typeof setInterval> | null = null
 let nextId = 0
 
-const roundConfig = computed(() => ARTIGLIO_ROUNDS[currentRound.value]!)
-const totalTarget = computed(() => ARTIGLIO_ROUNDS.reduce((s, r) => s + r.catchTarget, 0))
+const roundConfig = computed(() => ARTIGLIO_ROUNDS[0]!)
+const totalTarget = computed(() => roundConfig.value.catchTarget)
 
 function shuffleArray<T>(arr: T[]): T[] {
   const a = [...arr]
@@ -50,8 +49,8 @@ function shuffleArray<T>(arr: T[]): T[] {
 }
 
 function generateShelf() {
-  const goodCount = 4 + currentRound.value
-  const badCount = 1 + currentRound.value // 1 bad in round 1, 2 in round 2, 3 in round 3
+  const goodCount = 5
+  const badCount = 2
   const totalCount = goodCount + badCount
 
   const goodEmojis = shuffleArray(ARTIGLIO_DOLCETTI).slice(0, goodCount)
@@ -176,27 +175,13 @@ function checkGrab() {
 function onGrabComplete(success: boolean) {
   caughtEmoji.value = ''
 
-  const roundTarget = roundConfig.value.catchTarget
-  const caughtThisRound = totalCaught.value - ARTIGLIO_ROUNDS.slice(0, currentRound.value).reduce((s, r) => s + r.catchTarget, 0)
-
-  if (caughtThisRound >= roundTarget) {
-    if (currentRound.value < ARTIGLIO_ROUNDS.length - 1) {
-      phase.value = 'roundComplete'
-      playLevelUp()
-      emit('progress', Math.round(((currentRound.value + 1) / ARTIGLIO_ROUNDS.length) * 100))
-      setTimeout(() => {
-        currentRound.value++
-        attemptsLeft.value = Math.max(attemptsLeft.value, 3)
-        startRound()
-      }, 2000)
-    } else {
-      phase.value = 'win'
-      playVictory()
-      emit('progress', 100)
-      setTimeout(() => {
-        emit('complete', totalCaught.value * 100)
-      }, 3000)
-    }
+  if (totalCaught.value >= totalTarget.value) {
+    phase.value = 'win'
+    playVictory()
+    emit('progress', 100)
+    setTimeout(() => {
+      emit('complete', totalCaught.value * 100)
+    }, 3000)
   } else if (attemptsLeft.value <= 0) {
     phase.value = 'lose'
     playError()
@@ -240,7 +225,7 @@ onUnmounted(() => {
   <div class="artiglio-game">
     <!-- HUD -->
     <div class="artiglio-hud">
-      <span class="artiglio-hud-round">{{ $t('artiglio.round', { current: currentRound + 1, total: ARTIGLIO_ROUNDS.length }) }}</span>
+      <span class="artiglio-hud-round">{{ ARTIGLIO_ROUNDS[0]!.label }}</span>
       <span class="artiglio-hud-caught">🧁 {{ totalCaught }}/{{ totalTarget }}</span>
       <span class="artiglio-hud-attempts" :class="{ 'artiglio-hud-attempts--low': attemptsLeft <= 2 }">
         🎯 {{ attemptsLeft }}
@@ -303,16 +288,6 @@ onUnmounted(() => {
     >
       {{ $t('artiglio.grab') }}
     </button>
-
-    <!-- Round Complete Overlay -->
-    <div v-if="phase === 'roundComplete'" class="artiglio-overlay">
-      <div class="artiglio-overlay-card">
-        <div class="artiglio-overlay-emoji">🎉</div>
-        <div class="artiglio-overlay-title">{{ $t('artiglio.roundDone') }}</div>
-        <div class="artiglio-overlay-sub">{{ $t('artiglio.roundDoneSub') }}</div>
-        <div class="artiglio-overlay-score">🧁 {{ totalCaught }}/{{ totalTarget }}</div>
-      </div>
-    </div>
 
     <!-- Win Overlay -->
     <div v-if="phase === 'win'" class="artiglio-overlay">

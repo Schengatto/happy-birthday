@@ -30,11 +30,14 @@ const GAME_EMOJIS: Record<GameType, string> = {
   alchimia: '⚗️',
 }
 
-const THEME_COLORS = {
-  pink: 'linear-gradient(135deg, #ffb6c1, #ff69b4)',
-  dark: 'linear-gradient(135deg, #1a1a2e, #16213e)',
-  pastel: 'linear-gradient(135deg, #fce4ec, #e8eaf6)',
-} as const
+const THEME_COLORS: Record<string, string> = {
+  cuoricini: 'linear-gradient(135deg, #ffc1cc, #ff8fa3)',
+  floreale: 'linear-gradient(135deg, #f8c8dc, #d4a9e0, #a8d8ea)',
+  festivo: 'linear-gradient(135deg, #ffe082, #ffcc02, #ff8a65)',
+  'classic-light': 'linear-gradient(135deg, #f5f0e8, #e8dfd3)',
+  'classic-dark': 'linear-gradient(135deg, #1a1a2e, #16213e)',
+  modern: 'linear-gradient(135deg, #667eea, #764ba2, #f093fb)',
+}
 
 async function createCard() {
   isCreating.value = true

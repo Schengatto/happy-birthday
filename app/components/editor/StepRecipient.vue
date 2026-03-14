@@ -44,18 +44,18 @@ const emit = defineEmits<{
         <button
           type="button"
           class="field-toggle-btn"
-          :class="{ active: recipientGender === 'M' }"
-          @click="emit('update:recipientGender', 'M')"
-        >
-          {{ $t('recipient.male') }}
-        </button>
-        <button
-          type="button"
-          class="field-toggle-btn"
           :class="{ active: recipientGender === 'F' }"
           @click="emit('update:recipientGender', 'F')"
         >
           {{ $t('recipient.female') }}
+        </button>
+        <button
+          type="button"
+          class="field-toggle-btn"
+          :class="{ active: recipientGender === 'M' }"
+          @click="emit('update:recipientGender', 'M')"
+        >
+          {{ $t('recipient.male') }}
         </button>
       </div>
     </div>

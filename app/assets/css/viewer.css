@@ -5,6 +5,24 @@
   background-size: 400% 400%;
   animation: bgShift 12s ease infinite;
   overflow: hidden;
+  position: relative;
+}
+
+.layout-card::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: var(--bg-pattern);
+  background-size: var(--bg-pattern-size);
+  background-repeat: repeat;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.35;
+}
+
+.layout-card > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* Envelope */
@@ -178,6 +196,7 @@
   background: var(--bg-gradient);
   background-size: 400% 400%;
   animation: bgShift 12s ease infinite;
+  overflow: hidden;
 }
 
 .finale .confetti-canvas {
@@ -196,45 +215,90 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 1.5rem;
   text-align: center;
   z-index: 2;
+  gap: 0.75rem;
+}
+
+.finale-sparkles {
+  font-size: clamp(1.2rem, 4vw, 1.8rem);
+  letter-spacing: 8px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.finale-sparkles--bottom {
+  animation-delay: 1s;
+}
+
+.finale-cake-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .finale-candles {
-  font-size: 2rem;
-  margin-bottom: 0.25rem;
-  letter-spacing: 2px;
+  font-size: clamp(1.5rem, 5vw, 2.2rem);
+  margin-bottom: 0;
+  letter-spacing: 4px;
+}
+
+.finale-puffs {
+  animation: fadeIn 0.5s ease;
 }
 
 .finale-cake {
-  font-size: clamp(4rem, 15vw, 7rem);
+  font-size: clamp(4rem, 14vw, 6.5rem);
   animation: bounce 1.5s ease infinite;
   line-height: 1;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
+}
+
+.finale-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 1.25rem;
+  padding: clamp(1rem, 4vw, 1.75rem) clamp(1.25rem, 5vw, 2.5rem);
+  max-width: 420px;
+  width: 100%;
+  animation: popIn 0.5s ease-out;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .finale-title {
-  font-size: var(--fs-2xl);
+  font-size: clamp(1.4rem, 5vw, 2rem);
   font-weight: 800;
   animation: rainbow 3s ease infinite;
-  margin-top: 0.75rem;
+  line-height: 1.2;
+  letter-spacing: 1px;
+}
+
+.finale-divider {
+  font-size: 1.2rem;
+  margin: 0.5rem 0;
+  opacity: 0.8;
 }
 
 .finale-message {
   font-size: var(--fs-lg);
   color: var(--text-primary);
-  margin-top: 0.75rem;
-  max-width: 400px;
+  line-height: 1.5;
+  max-width: 360px;
+  margin: 0 auto;
 }
 
 .finale-blow-btn {
-  margin-top: 1.25rem;
+  margin-top: 1rem;
+  font-size: var(--fs-lg);
+  padding: 0.75rem 2rem;
+  animation: pulse 2s ease-in-out infinite;
 }
 
 .finale-celebration {
-  font-size: 2rem;
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
   margin-top: 0.75rem;
-  letter-spacing: 4px;
+  letter-spacing: 6px;
   animation: bounce 0.8s ease infinite alternate;
 }
 
@@ -243,13 +307,38 @@
   inset: 0;
   pointer-events: none;
   z-index: 1;
+  overflow: hidden;
 }
 
 .finale-balloon {
   position: absolute;
   bottom: -60px;
-  font-size: 2.5rem;
+  font-size: clamp(2rem, 6vw, 2.8rem);
   animation: floatUp var(--dur, 6s) linear infinite;
   animation-delay: var(--delay, 0s);
   left: var(--x, 50%);
+}
+
+.finale-create-link {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+  text-decoration: none;
+  opacity: 0.75;
+  transition: opacity 0.2s;
+  z-index: 10;
+}
+
+.finale-create-link:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.85; }
 }
