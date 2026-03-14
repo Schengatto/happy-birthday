@@ -349,6 +349,11 @@
   box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1), 0 4px 16px rgba(39, 174, 96, 0.08);
 }
 
+.game-pick-card.disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
 .game-pick-card.selected::before {
   opacity: 0.05;
 }
@@ -602,80 +607,62 @@
   background: rgba(196, 112, 75, 0.05);
 }
 
-/* ─── Preview Section ─── */
-.preview-summary {
+/* ─── Preview List ─── */
+.preview-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.875rem;
-  margin-bottom: 2rem;
+  gap: 0.5rem;
 }
 
-.preview-card {
+.preview-list-item {
   display: flex;
-  align-items: flex-start;
-  gap: 0.875rem;
-  padding: 1rem 1.125rem;
+  align-items: stretch;
+  gap: 0;
+  padding: 0;
   background: var(--bg-secondary);
   border-radius: var(--radius-md);
   border: 1px solid var(--border-color);
+  overflow: hidden;
 }
 
-.preview-card-icon {
-  font-size: 1.25rem;
-  flex-shrink: 0;
-  margin-top: 0.1rem;
-}
-
-.preview-card-content {
-  flex: 1;
-  min-width: 0;
-}
-
-.preview-card-label {
+.preview-list-label {
   font-size: var(--fs-xs);
   font-weight: 700;
   color: var(--text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-bottom: 0.2rem;
-}
-
-.preview-card-value {
-  font-size: var(--fs-base);
-  color: var(--text-primary);
-  font-weight: 500;
-  word-break: break-word;
-}
-
-.preview-games-list {
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+  width: 8.5rem;
+  text-align: left;
+  padding: 0.65rem 0.75rem;
+  background: rgba(0, 0, 0, 0.06);
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-top: 0.25rem;
-}
-
-.preview-game-tag {
-  display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  padding: 0.3rem 0.7rem;
-  background: var(--card-bg);
-  border-radius: var(--radius-full);
-  font-size: var(--fs-xs);
-  font-weight: 600;
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
 }
 
-.preview-theme-dot {
-  width: 20px;
-  height: 20px;
+.preview-list-value {
+  flex: 1;
+  font-size: var(--fs-sm);
+  color: var(--text-primary);
+  font-weight: 600;
+  word-break: break-word;
+  line-height: 1.4;
+  min-width: 0;
+  padding: 0.65rem 0.875rem;
+}
+
+.preview-list-theme-dot {
+  width: 14px;
+  height: 14px;
   border-radius: var(--radius-full);
   display: inline-block;
   vertical-align: middle;
-  margin-right: 0.4rem;
+  margin-right: 0.25rem;
   border: 2px solid rgba(255, 255, 255, 0.5);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* URL Box */
@@ -778,4 +765,33 @@
   font-size: var(--fs-base);
   font-weight: 700;
   color: var(--text-primary);
+}
+
+/* ─── Share Step ─── */
+.share-step {
+  text-align: center;
+}
+
+.share-icon {
+  font-size: 3.5rem;
+  margin-bottom: 0.75rem;
+  animation: popIn 0.4s ease;
+}
+
+.share-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.share-btn {
+  width: 100%;
+  max-width: 280px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }

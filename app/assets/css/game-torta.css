@@ -1,0 +1,497 @@
+/* ═══ GameTorta — Prepara la Torta ═══ */
+
+.torta-game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1rem;
+  min-height: 60dvh;
+}
+
+/* Phase dots */
+.torta-phases {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.torta-phase-dot {
+  font-size: 1.4rem;
+  opacity: 0.35;
+  filter: grayscale(1);
+  transition: all 0.3s;
+}
+
+.torta-phase-dot.active {
+  opacity: 1;
+  filter: grayscale(0);
+  transform: scale(1.25);
+}
+
+.torta-phase-dot.done {
+  opacity: 0.8;
+  filter: grayscale(0);
+}
+
+/* HUD */
+.torta-hud {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  padding: 0.5rem 0.8rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md, 0.75rem);
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
+}
+
+.torta-hud-phase {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.torta-hud-score {
+  font-weight: 700;
+  font-size: 1.1em;
+  color: var(--accent-yellow);
+}
+
+/* Section */
+.torta-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  width: 100%;
+  max-width: 420px;
+  animation: fadeInUp 0.4s ease-out;
+}
+
+/* Instruction */
+.torta-instruction {
+  font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+/* ── Phase 1: Ingredienti ── */
+
+.torta-recipe {
+  background: var(--card-bg);
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-md, 0.75rem);
+  padding: 0.6rem 1rem;
+  width: 100%;
+}
+
+.torta-recipe-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  margin-bottom: 0.4rem;
+  text-align: center;
+}
+
+.torta-recipe-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: center;
+}
+
+.torta-recipe-item {
+  font-size: 0.85rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: all 0.3s;
+}
+
+.torta-recipe-item.collected {
+  background: rgba(46, 204, 113, 0.25);
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+/* Feedback */
+.torta-feedback {
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  animation: popIn 0.3s ease-out;
+}
+
+.torta-feedback--success {
+  color: #2ecc71;
+}
+
+.torta-feedback--error {
+  color: #e74c3c;
+}
+
+/* Ingredient grid */
+.torta-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.3rem;
+}
+
+.torta-ingredient {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md, 0.75rem);
+  border: 3px solid var(--border-color);
+  background: var(--bg-secondary);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  transition: transform 0.15s, border-color 0.2s, background 0.2s, opacity 0.3s;
+}
+
+.torta-ingredient:active:not(.torta-ingredient--collected) {
+  transform: scale(0.9);
+}
+
+.torta-ingredient--collected {
+  border-color: #2ecc71;
+  background: rgba(46, 204, 113, 0.15);
+  opacity: 0.5;
+  cursor: default;
+  pointer-events: none;
+}
+
+.torta-ingredient--collected .torta-ingredient-emoji {
+  animation: popIn 0.3s ease-out;
+}
+
+.torta-ingredient--wrong {
+  animation: shake 0.3s;
+  border-color: #e74c3c;
+}
+
+.torta-ingredient-emoji {
+  font-size: clamp(2rem, 8vw, 3rem);
+}
+
+/* ── Phase 2: Mescola ── */
+
+.torta-bowl {
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  transition: transform 0.1s;
+}
+
+.torta-bowl:active {
+  transform: scale(0.92);
+}
+
+.torta-bowl--shaking {
+  animation: wiggle 0.15s;
+}
+
+.torta-bowl-emoji {
+  font-size: clamp(5rem, 20vw, 8rem);
+  display: block;
+}
+
+.torta-bowl-splashes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.torta-splash {
+  position: absolute;
+  font-size: 1.2rem;
+  animation: floatUp 0.8s ease-out forwards;
+  top: 20%;
+  left: calc(30% + var(--splash-i, 0) * 8%);
+  opacity: 0.8;
+}
+
+.torta-mix-bar-container {
+  width: 80%;
+  max-width: 300px;
+  height: 12px;
+  background: var(--border-color);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.torta-mix-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #f39c12, #e67e22, #d35400);
+  border-radius: 6px;
+  transition: width 0.15s;
+}
+
+.torta-mix-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Phase 3: Inforna ── */
+
+.torta-oven {
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  transition: transform 0.2s;
+}
+
+.torta-oven:active:not(.torta-oven--glowing) {
+  transform: scale(0.95);
+}
+
+.torta-oven-body {
+  background: var(--bg-secondary);
+  border: 3px solid var(--border-color);
+  border-radius: var(--radius-lg, 1.5rem);
+  padding: 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.torta-oven--glowing .torta-oven-body {
+  border-color: #e67e22;
+  box-shadow: 0 0 30px rgba(230, 126, 34, 0.3);
+}
+
+.torta-oven--done .torta-oven-body {
+  border-color: #2ecc71;
+  box-shadow: 0 0 30px rgba(46, 204, 113, 0.3);
+}
+
+.torta-oven-window {
+  width: 100px;
+  height: 80px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: var(--radius-sm, 0.5rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s;
+}
+
+.torta-oven--glowing .torta-oven-window {
+  background: rgba(230, 126, 34, 0.15);
+}
+
+.torta-oven-emoji {
+  font-size: 3rem;
+  transition: transform 0.3s;
+}
+
+.torta-oven-emoji--baking {
+  animation: pulse 1s infinite;
+}
+
+.torta-oven-emoji--done {
+  animation: popIn 0.5s ease-out;
+}
+
+.torta-oven-handle {
+  width: 50px;
+  height: 6px;
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+.torta-steam {
+  position: absolute;
+  top: -1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.8rem;
+  pointer-events: none;
+}
+
+.torta-steam-puff {
+  font-size: 1.2rem;
+  animation: floatUp 1.5s ease-out infinite;
+  animation-delay: calc(var(--puff-i, 0) * 0.4s);
+}
+
+.torta-bake-bar-container {
+  width: 80%;
+  max-width: 300px;
+  height: 12px;
+  background: var(--border-color);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.torta-bake-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #e67e22, #e74c3c, #2ecc71);
+  border-radius: 6px;
+  transition: width 0.1s;
+}
+
+/* ── Phase 4: Candeline ── */
+
+.torta-cake-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.torta-cake-base {
+  font-size: clamp(5rem, 18vw, 7rem);
+}
+
+.torta-candles-row {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.torta-candle-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 2.5rem;
+  min-height: 3rem;
+  justify-content: flex-end;
+}
+
+.torta-candle-placeholder {
+  font-size: 1.2rem;
+  opacity: 0.3;
+}
+
+.torta-candle-body {
+  font-size: 1.5rem;
+  animation: popIn 0.3s ease-out;
+}
+
+.torta-candle-flame {
+  font-size: 0.9rem;
+  animation: pulse 0.6s infinite;
+  margin-bottom: -0.2rem;
+}
+
+.torta-candles-tray {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+  padding: 0.6rem 1rem;
+  background: var(--card-bg);
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-md, 0.75rem);
+  min-height: 3rem;
+}
+
+.torta-candle-pick {
+  font-size: 1.8rem;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  transition: transform 0.15s, opacity 0.3s;
+}
+
+.torta-candle-pick:active:not(.torta-candle-pick--used) {
+  transform: scale(0.85);
+}
+
+.torta-candle-pick--used {
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  overflow: hidden;
+}
+
+/* ── Overlay ── */
+
+.torta-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  animation: fadeInScale 0.3s ease-out;
+}
+
+.torta-overlay-card {
+  background: var(--card-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 1.5rem;
+  padding: 2rem 2.5rem;
+  text-align: center;
+  max-width: 320px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.torta-overlay-emoji {
+  font-size: 4rem;
+  margin-bottom: 0.8rem;
+  animation: bounce 0.6s;
+}
+
+.torta-overlay-title {
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.4rem;
+}
+
+.torta-overlay-sub {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.8rem;
+}
+
+.torta-overlay-score {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--accent-yellow);
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 400px) {
+  .torta-grid {
+    gap: 0.4rem;
+  }
+
+  .torta-candles-row {
+    gap: 0.3rem;
+  }
+
+  .torta-candle-slot {
+    width: 2rem;
+  }
+}
+
+@media (min-width: 540px) {
+  .torta-grid {
+    grid-template-columns: repeat(3, 90px);
+    justify-content: center;
+  }
+}

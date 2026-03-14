@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import '~/assets/css/editor.css'
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import type { CardConfig, GameType } from '../../../types/card'
 import { useLocale } from '~/composables/useLocale'
 
@@ -12,19 +12,10 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   back: []
+  created: [url: string]
 }>()
 
 const isCreating = ref(false)
-const cardUrl = ref('')
-const cardPath = computed(() => {
-  if (!cardUrl.value) return ''
-  try {
-    return new URL(cardUrl.value).pathname
-  } catch {
-    return cardUrl.value
-  }
-})
-const copied = ref(false)
 
 const GAME_EMOJIS: Record<GameType, string> = {
   missione: '🎯',
@@ -32,6 +23,11 @@ const GAME_EMOJIS: Record<GameType, string> = {
   palloncini: '🎈',
   sequenza: '🧠',
   regalo: '🎁',
+  torta: '🎂',
+  artiglio: '🏗️',
+  bolle: '🫧',
+  dolcetti: '🍬',
+  alchimia: '⚗️',
 }
 
 const THEME_COLORS = {
@@ -48,21 +44,11 @@ async function createCard() {
       body: props.config,
     })
     const base = window.location.origin
-    cardUrl.value = `${base}/card/${id}`
+    emit('created', `${base}/card/${id}`)
   } catch (err) {
     console.error($t('preview.error'), err)
   } finally {
     isCreating.value = false
-  }
-}
-
-async function copyUrl() {
-  try {
-    await navigator.clipboard.writeText(cardUrl.value)
-    copied.value = true
-    setTimeout(() => { copied.value = false }, 2000)
-  } catch {
-    // Fallback: select the text
   }
 }
 </script>
@@ -72,94 +58,51 @@ async function copyUrl() {
     <h2 class="wizard-title">{{ $t('preview.title') }}</h2>
     <p class="wizard-subtitle">{{ $t('preview.subtitle') }}</p>
 
-    <div class="preview-summary">
-      <div class="preview-card">
-        <span class="preview-card-icon">🎁</span>
-        <div class="preview-card-content">
-          <div class="preview-card-label">{{ $t('preview.recipient') }}</div>
-          <div class="preview-card-value">{{ config.recipientName }}</div>
-        </div>
-      </div>
+    <ul class="preview-list">
+      <li class="preview-list-item">
+        <span class="preview-list-label">{{ $t('preview.recipient') }}</span>
+        <span class="preview-list-value">{{ config.recipientName }}</span>
+      </li>
+      <li class="preview-list-item">
+        <span class="preview-list-label">{{ $t('preview.from') }}</span>
+        <span class="preview-list-value">{{ config.senderName }}</span>
+      </li>
+      <li class="preview-list-item">
+        <span class="preview-list-label">{{ $t('preview.message') }}</span>
+        <span class="preview-list-value">{{ config.message }}</span>
+      </li>
+      <li class="preview-list-item">
+        <span class="preview-list-label">{{ $t('preview.gamesLabel') }}</span>
+        <span class="preview-list-value">
+          <span
+            v-for="(game, idx) in config.games"
+            :key="game.type"
+          >{{ idx > 0 ? ', ' : '' }}{{ GAME_EMOJIS[game.type] }} {{ $t('preview.game.' + game.type) }}</span>
+        </span>
+      </li>
+      <li class="preview-list-item">
+        <span class="preview-list-label">{{ $t('preview.themeLabel') }}</span>
+        <span class="preview-list-value">
+          <span
+            class="preview-list-theme-dot"
+            :style="{ background: THEME_COLORS[config.theme] }"
+          />
+          {{ $t('theme.' + config.theme) }}
+        </span>
+      </li>
+    </ul>
 
-      <div class="preview-card">
-        <span class="preview-card-icon">✍️</span>
-        <div class="preview-card-content">
-          <div class="preview-card-label">{{ $t('preview.from') }}</div>
-          <div class="preview-card-value">{{ config.senderName }}</div>
-        </div>
-      </div>
-
-      <div class="preview-card">
-        <span class="preview-card-icon">💌</span>
-        <div class="preview-card-content">
-          <div class="preview-card-label">{{ $t('preview.message') }}</div>
-          <div class="preview-card-value">{{ config.message }}</div>
-        </div>
-      </div>
-
-      <div class="preview-card">
-        <span class="preview-card-icon">🎮</span>
-        <div class="preview-card-content">
-          <div class="preview-card-label">{{ $t('preview.gamesLabel') }}</div>
-          <div class="preview-games-list">
-            <span
-              v-for="game in config.games"
-              :key="game.type"
-              class="preview-game-tag"
-            >
-              {{ GAME_EMOJIS[game.type] }} {{ $t('preview.game.' + game.type) }}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <div class="preview-card">
-        <span class="preview-card-icon">🎨</span>
-        <div class="preview-card-content">
-          <div class="preview-card-label">{{ $t('preview.themeLabel') }}</div>
-          <div class="preview-card-value">
-            <span
-              class="preview-theme-dot"
-              :style="{ background: THEME_COLORS[config.theme] }"
-            />
-            {{ $t('theme.' + config.theme) }}
-          </div>
-        </div>
-      </div>
+    <div class="wizard-nav">
+      <button class="btn btn-secondary" @click="emit('back')">
+        {{ $t('wizard.back') }}
+      </button>
+      <button
+        class="btn btn-primary"
+        :disabled="isCreating"
+        @click="createCard"
+      >
+        {{ isCreating ? $t('preview.creating') : $t('preview.create') }}
+      </button>
     </div>
-
-    <template v-if="!cardUrl">
-      <div class="wizard-nav">
-        <button class="btn btn-secondary" @click="emit('back')">
-          {{ $t('wizard.back') }}
-        </button>
-        <button
-          class="btn btn-primary"
-          :disabled="isCreating"
-          @click="createCard"
-        >
-          {{ isCreating ? $t('preview.creating') : $t('preview.create') }}
-        </button>
-      </div>
-    </template>
-
-    <template v-else>
-      <p class="preview-success">
-        {{ $t('preview.created') }}
-      </p>
-
-      <div class="preview-url-box">
-        <span class="preview-url-text">{{ cardUrl }}</span>
-        <button class="btn btn-primary btn-copy" @click="copyUrl">
-          {{ copied ? $t('preview.copied') : $t('preview.copy') }}
-        </button>
-      </div>
-
-      <div style="text-align: center; margin-top: 1rem;">
-        <NuxtLink :to="cardPath" class="btn btn-primary preview-open-link">
-          {{ $t('preview.open') }}
-        </NuxtLink>
-      </div>
-    </template>
   </div>
 </template>

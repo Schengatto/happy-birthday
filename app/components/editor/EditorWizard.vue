@@ -6,10 +6,12 @@ import { provideLocale } from '~/composables/useLocale'
 import { t } from '~/utils/i18n'
 
 const step = ref(0)
-const totalSteps = 5
+const totalSteps = 6
 
 const locale = ref<CardLocale>('it')
 provideLocale(locale)
+
+const cardUrl = ref('')
 
 const stepLabels = computed(() => [
   t(locale.value, 'wizard.step.language'),
@@ -17,6 +19,7 @@ const stepLabels = computed(() => [
   t(locale.value, 'wizard.step.games'),
   t(locale.value, 'wizard.step.theme'),
   t(locale.value, 'wizard.step.preview'),
+  t(locale.value, 'wizard.step.share'),
 ])
 
 const recipientName = ref('')
@@ -70,9 +73,9 @@ function prev() {
           :class="{
             active: step === i,
             done: step > i,
-            clickable: step > i,
+            clickable: step > i && step < 5,
           }"
-          @click="step > i && (step = i)"
+          @click="step > i && step < 5 && (step = i)"
         >
           <div class="wizard-step-circle">
             <span v-if="step > i">&#10003;</span>
@@ -117,6 +120,12 @@ function prev() {
         v-if="step === 4"
         :config="config"
         @back="prev"
+        @created="(url: string) => { cardUrl = url; step = 5 }"
+      />
+
+      <StepShare
+        v-if="step === 5"
+        :card-url="cardUrl"
       />
     </div>
 

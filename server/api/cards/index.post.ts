@@ -9,11 +9,11 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Campi obbligatori mancanti' })
   }
 
-  if (!body.games || body.games.length === 0 || body.games.length > 5) {
-    throw createError({ statusCode: 400, statusMessage: 'Seleziona da 1 a 5 giochi' })
+  if (!body.games || body.games.length === 0 || body.games.length > 10) {
+    throw createError({ statusCode: 400, statusMessage: 'Seleziona da 1 a 10 giochi' })
   }
 
-  const validGameTypes = ['missione', 'coppie', 'palloncini', 'sequenza', 'regalo']
+  const validGameTypes = ['missione', 'coppie', 'palloncini', 'sequenza', 'regalo', 'torta', 'artiglio', 'bolle', 'dolcetti', 'alchimia']
   for (const game of body.games) {
     if (!validGameTypes.includes(game.type)) {
       throw createError({ statusCode: 400, statusMessage: `Tipo di gioco non valido: ${game.type}` })

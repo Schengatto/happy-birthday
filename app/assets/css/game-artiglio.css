@@ -1,0 +1,246 @@
+/* ═══ GameArtiglio — Acchiappa i Dolcetti ═══ */
+
+.artiglio-game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1rem;
+  min-height: 60dvh;
+}
+
+/* HUD */
+.artiglio-hud {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  padding: 0.5rem 0.8rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md, 0.75rem);
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
+}
+
+.artiglio-hud-round {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.artiglio-hud-caught {
+  font-weight: 700;
+  font-size: 1.1em;
+  color: var(--accent-yellow);
+}
+
+.artiglio-hud-attempts {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.artiglio-hud-attempts--low {
+  color: #e74c3c;
+  animation: pulse 0.5s infinite;
+}
+
+/* Instruction */
+.artiglio-instruction {
+  font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+/* Machine container */
+.artiglio-machine {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  height: clamp(250px, 50vw, 340px);
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-lg, 1rem);
+  overflow: hidden;
+}
+
+/* Rail at the top */
+.artiglio-rail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  background: linear-gradient(180deg, var(--border-color) 0%, transparent 100%);
+  border-bottom: 2px solid var(--border-color);
+  z-index: 10;
+}
+
+/* Rope: positioned absolutely, stretches from rail to claw */
+.artiglio-rope {
+  position: absolute;
+  width: 3px;
+  min-height: 0;
+  background: var(--text-secondary);
+  transform: translateX(-50%);
+  z-index: 5;
+  border-radius: 1px;
+}
+
+/* Claw assembly: positioned absolutely, moves with clawX/clawDrop */
+.artiglio-claw-assembly {
+  position: absolute;
+  transform: translateX(-50%);
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Claw */
+.artiglio-claw {
+  display: flex;
+  align-items: flex-start;
+  gap: 2px;
+  font-size: clamp(1.1rem, 3.5vw, 1.5rem);
+  font-weight: 900;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.artiglio-claw-left,
+.artiglio-claw-right {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+/* Open state (default) — arms spread wider */
+.artiglio-claw-left {
+  transform: rotate(-20deg);
+}
+
+.artiglio-claw-right {
+  transform: rotate(20deg);
+}
+
+/* Closed state — arms close to grab */
+.artiglio-claw--closed .artiglio-claw-left {
+  transform: rotate(10deg);
+}
+
+.artiglio-claw--closed .artiglio-claw-right {
+  transform: rotate(-10deg);
+}
+
+/* Prize held by claw */
+.artiglio-claw-prize {
+  font-size: clamp(1.4rem, 4.5vw, 1.8rem);
+  margin-top: -2px;
+  animation: popIn 0.3s ease-out;
+}
+
+/* Shelf at the bottom */
+.artiglio-shelf {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(0deg, var(--card-bg) 60%, transparent 100%);
+  border-top: 2px dashed var(--border-color);
+}
+
+.artiglio-sweet {
+  position: absolute;
+  bottom: 8px;
+  transform: translateX(-50%);
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
+  transition: opacity 0.3s, transform 0.3s;
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Grab button */
+.artiglio-grab-btn {
+  padding: 0.8rem 2.5rem;
+  font-size: clamp(1.1rem, 3vw, 1.3rem);
+  font-weight: 700;
+  color: var(--btn-text, #fff);
+  background: var(--btn-gradient, linear-gradient(135deg, #e74c3c, #c0392b));
+  border: none;
+  border-radius: var(--radius-full, 50px);
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  box-shadow: var(--shadow-lg, 0 4px 15px rgba(0, 0, 0, 0.2));
+  transition: transform 0.1s, opacity 0.2s;
+  min-width: 160px;
+}
+
+.artiglio-grab-btn:active:not(:disabled) {
+  transform: scale(0.93);
+}
+
+.artiglio-grab-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Overlays */
+.artiglio-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  animation: fadeInScale 0.3s ease-out;
+}
+
+.artiglio-overlay-card {
+  background: var(--card-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 1.5rem;
+  padding: 2rem 2.5rem;
+  text-align: center;
+  max-width: 320px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.artiglio-overlay-emoji {
+  font-size: 3.5rem;
+  margin-bottom: 0.8rem;
+  animation: bounce 0.6s;
+}
+
+.artiglio-overlay-title {
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.4rem;
+}
+
+.artiglio-overlay-sub {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.8rem;
+}
+
+.artiglio-overlay-score {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--accent-yellow);
+}
+
+@media (max-width: 360px) {
+  .artiglio-machine {
+    height: 220px;
+  }
+  .artiglio-grab-btn {
+    padding: 0.6rem 2rem;
+  }
+}

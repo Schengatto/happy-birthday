@@ -17,7 +17,7 @@ export interface GameSelection {
   type: GameType
 }
 
-export type GameType = 'missione' | 'coppie' | 'palloncini' | 'sequenza' | 'regalo'
+export type GameType = 'missione' | 'coppie' | 'palloncini' | 'sequenza' | 'regalo' | 'torta' | 'artiglio' | 'bolle' | 'dolcetti' | 'alchimia'
 
 export type CardTheme = 'pink' | 'dark' | 'pastel'
 

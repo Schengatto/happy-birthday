@@ -27,6 +27,11 @@ const gameOptions: GameOption[] = [
   { type: 'palloncini', emoji: '🎀', nameKey: 'games.palloncini.name', descKey: 'games.palloncini.desc' },
   { type: 'sequenza', emoji: '🧠', nameKey: 'games.sequenza.name', descKey: 'games.sequenza.desc' },
   { type: 'regalo', emoji: '🎁', nameKey: 'games.regalo.name', descKey: 'games.regalo.desc' },
+  { type: 'torta', emoji: '🎂', nameKey: 'games.torta.name', descKey: 'games.torta.desc' },
+  { type: 'artiglio', emoji: '🏗️', nameKey: 'games.artiglio.name', descKey: 'games.artiglio.desc' },
+  { type: 'bolle', emoji: '🫧', nameKey: 'games.bolle.name', descKey: 'games.bolle.desc' },
+  { type: 'dolcetti', emoji: '🍬', nameKey: 'games.dolcetti.name', descKey: 'games.dolcetti.desc' },
+  { type: 'alchimia', emoji: '⚗️', nameKey: 'games.alchimia.name', descKey: 'games.alchimia.desc' },
 ]
 
 const tryingGame = ref<GameType | null>(null)
@@ -70,7 +75,7 @@ function onTryGameComplete() {
         v-for="game in gameOptions"
         :key="game.type"
         class="game-pick-card"
-        :class="{ selected: isSelected(game.type) }"
+        :class="{ selected: isSelected(game.type), disabled: !isSelected(game.type) && selectedGames.length >= 5 }"
         @click="toggleGame(game.type)"
       >
         <span class="game-pick-emoji">{{ game.emoji }}</span>
@@ -126,6 +131,36 @@ function onTryGameComplete() {
           />
           <GameRegalo
             v-if="tryingGame === 'regalo'"
+            recipient-name="Anteprima"
+            recipient-gender="M"
+            @complete="onTryGameComplete"
+          />
+          <GameTorta
+            v-if="tryingGame === 'torta'"
+            recipient-name="Anteprima"
+            recipient-gender="M"
+            @complete="onTryGameComplete"
+          />
+          <GameArtiglio
+            v-if="tryingGame === 'artiglio'"
+            recipient-name="Anteprima"
+            recipient-gender="M"
+            @complete="onTryGameComplete"
+          />
+          <GameBolle
+            v-if="tryingGame === 'bolle'"
+            recipient-name="Anteprima"
+            recipient-gender="M"
+            @complete="onTryGameComplete"
+          />
+          <GameDolcetti
+            v-if="tryingGame === 'dolcetti'"
+            recipient-name="Anteprima"
+            recipient-gender="M"
+            @complete="onTryGameComplete"
+          />
+          <GameAlchimia
+            v-if="tryingGame === 'alchimia'"
             recipient-name="Anteprima"
             recipient-gender="M"
             @complete="onTryGameComplete"

@@ -82,6 +82,41 @@ function onGameComplete(score: number) {
         :theme="theme"
         @complete="onGameComplete"
       />
+      <GameTorta
+        v-if="currentGameType === 'torta'"
+        :recipient-name="recipientName"
+        :recipient-gender="recipientGender"
+        :theme="theme"
+        @complete="onGameComplete"
+      />
+      <GameArtiglio
+        v-if="currentGameType === 'artiglio'"
+        :recipient-name="recipientName"
+        :recipient-gender="recipientGender"
+        :theme="theme"
+        @complete="onGameComplete"
+      />
+      <GameBolle
+        v-if="currentGameType === 'bolle'"
+        :recipient-name="recipientName"
+        :recipient-gender="recipientGender"
+        :theme="theme"
+        @complete="onGameComplete"
+      />
+      <GameDolcetti
+        v-if="currentGameType === 'dolcetti'"
+        :recipient-name="recipientName"
+        :recipient-gender="recipientGender"
+        :theme="theme"
+        @complete="onGameComplete"
+      />
+      <GameAlchimia
+        v-if="currentGameType === 'alchimia'"
+        :recipient-name="recipientName"
+        :recipient-gender="recipientGender"
+        :theme="theme"
+        @complete="onGameComplete"
+      />
     </div>
   </div>
 </template>

@@ -1,0 +1,180 @@
+/* ═══ GameDolcetti — Raccogli i Dolcetti ═══ */
+
+.dolcetti-game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  min-height: 60dvh;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* HUD */
+.dolcetti-hud {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  padding: 0.5rem 0.8rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md, 0.75rem);
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
+}
+
+.dolcetti-hud-caught {
+  font-weight: 700;
+  font-size: 1.1em;
+  color: var(--accent-yellow);
+}
+
+.dolcetti-hud-lives {
+  display: flex;
+  gap: 2px;
+  font-size: 1em;
+}
+
+.dolcetti-life--lost {
+  opacity: 0.4;
+}
+
+/* Instruction */
+.dolcetti-instruction {
+  font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+/* Game area */
+.dolcetti-area {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  height: clamp(280px, 55vw, 380px);
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-lg, 1rem);
+  overflow: hidden;
+  touch-action: none;
+}
+
+/* Falling items */
+.dolcetti-item {
+  position: absolute;
+  transform: translateX(-50%);
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  transition: none;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.dolcetti-item--bad {
+  filter: drop-shadow(0 0 4px rgba(231, 76, 60, 0.5));
+}
+
+/* Player character */
+.dolcetti-player {
+  position: absolute;
+  bottom: 4%;
+  transform: translateX(-50%);
+  font-size: clamp(2rem, 7vw, 2.8rem);
+  z-index: 5;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+/* Mobile controls */
+.dolcetti-controls {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.dolcetti-ctrl-btn {
+  width: clamp(60px, 15vw, 80px);
+  height: clamp(60px, 15vw, 80px);
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-primary);
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  box-shadow: var(--shadow-md, 0 2px 8px rgba(0, 0, 0, 0.15));
+  transition: transform 0.1s, background 0.1s;
+}
+
+.dolcetti-ctrl-btn:active:not(:disabled) {
+  transform: scale(0.9);
+  background: var(--border-color);
+}
+
+.dolcetti-ctrl-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Overlays */
+.dolcetti-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  animation: fadeInScale 0.3s ease-out;
+}
+
+.dolcetti-overlay-card {
+  background: var(--card-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 1.5rem;
+  padding: 2rem 2.5rem;
+  text-align: center;
+  max-width: 320px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.dolcetti-overlay-emoji {
+  font-size: 3.5rem;
+  margin-bottom: 0.8rem;
+  animation: bounce 0.6s;
+}
+
+.dolcetti-overlay-title {
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.4rem;
+}
+
+.dolcetti-overlay-sub {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.8rem;
+}
+
+.dolcetti-overlay-score {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--accent-yellow);
+}
+
+@media (max-width: 360px) {
+  .dolcetti-area {
+    height: 240px;
+  }
+  .dolcetti-ctrl-btn {
+    width: 55px;
+    height: 55px;
+  }
+}
