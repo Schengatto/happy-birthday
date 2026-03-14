@@ -32,15 +32,11 @@ export const COPPIE_LEVELS = [
 
 // ═══ MISSIONE 3: Decora la Sala ═══
 
-// Cattura le decorazioni per abbellire la sala
-export const PALLONCINI_GOOD = ['🎈', '🎀', '🌸', '⭐', '🎊']
-export const PALLONCINI_BAD = ['🌧️', '⛈️', '🐛', '🪲', '🐜']
-
-export const PALLONCINI_LEVELS = [
-  { badge: 'Decorazioni Base 🌸', spawnInterval: 1300, baseDur: 5500, goodRatio: 0.72, time: 30 },
-  { badge: 'Stelle Filanti 🌟', spawnInterval: 850, baseDur: 4200, goodRatio: 0.62, time: 30 },
-  { badge: 'Gran Finale 🔥', spawnInterval: 620, baseDur: 3100, goodRatio: 0.55, time: 35 },
-]
+// Acchiappa i palloncini
+export const PALLONCINI_EMOJIS = ['🎈', '🎈', '🎈', '🟡', '🔴', '🟢', '🔵', '🟣']
+export const PALLONCINI_TARGET = 5
+export const PALLONCINI_SPAWN_INTERVAL = 1200
+export const PALLONCINI_BASE_DUR = 5000
 
 // Balloons overlay emojis
 export const BALLOON_EMOJIS = ['🎈', '🎉', '🎊', '💖', '⭐', '🌟', '🥳', '💜']

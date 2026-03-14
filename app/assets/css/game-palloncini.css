@@ -1,4 +1,4 @@
-/* GamePalloncini – Balloon Pop Game */
+/* GamePalloncini – Acchiappa i Palloncini */
 
 /* ── Game container ── */
 .palloncini-game {
@@ -29,51 +29,18 @@
   border-bottom: 2px solid var(--border-color);
 }
 
-.palloncini-hud-level {
+.palloncini-hud-title {
   font-size: var(--fs-sm);
   font-weight: 700;
   color: var(--text-primary);
-  background: var(--btn-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
-.palloncini-hud-score {
-  font-size: var(--fs-sm);
-  font-weight: 700;
+.palloncini-hud-counter {
+  font-size: var(--fs-lg);
+  font-weight: 800;
   color: var(--accent-yellow);
-  min-width: 60px;
+  min-width: 50px;
   text-align: center;
-}
-
-.palloncini-hud-hearts {
-  display: flex;
-  gap: 4px;
-  font-size: var(--fs-base);
-}
-
-.palloncini-hud-heart {
-  transition: transform 0.2s, opacity 0.3s;
-}
-
-.palloncini-hud-heart--lost {
-  opacity: 0.25;
-  transform: scale(0.7);
-  filter: grayscale(1);
-}
-
-.palloncini-hud-timer {
-  font-size: var(--fs-sm);
-  font-weight: 700;
-  color: var(--text-primary);
-  min-width: 40px;
-  text-align: right;
-}
-
-.palloncini-hud-timer--warning {
-  color: #ff4444;
-  animation: pulse 0.6s ease infinite;
 }
 
 /* ── Arena ── */
@@ -122,13 +89,6 @@
   }
 }
 
-/* ── Bad item (rain/lightning/insects) ── */
-.palloncini-balloon--bad {
-  cursor: default;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
-  opacity: 0.85;
-}
-
 /* ── Popped balloon ── */
 .palloncini-balloon--popped {
   animation: palloncini-pop 0.35s ease-out forwards;
@@ -150,39 +110,20 @@
   }
 }
 
-/* ── Score popup (+10 / heart lost) ── */
-.palloncini-popup {
+/* ── Instruction ── */
+.palloncini-instruction {
   position: absolute;
-  z-index: 30;
+  bottom: 24px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+  color: var(--text-secondary);
   pointer-events: none;
-  font-size: var(--fs-lg);
-  font-weight: 800;
-  white-space: nowrap;
-  animation: palloncini-popup-rise 0.9s ease-out forwards;
+  z-index: 15;
 }
 
-.palloncini-popup--good {
-  color: var(--accent-yellow);
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-}
-
-.palloncini-popup--bad {
-  color: #ff4444;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-}
-
-@keyframes palloncini-popup-rise {
-  0% {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-60px) scale(1.3);
-    opacity: 0;
-  }
-}
-
-/* ── Overlays (level complete / win / lose) ── */
+/* ── Overlays ── */
 .palloncini-overlay {
   position: absolute;
   inset: 0;
@@ -221,13 +162,6 @@
 .palloncini-overlay-sub {
   font-size: var(--fs-base);
   color: var(--text-secondary);
-  margin-bottom: 16px;
-}
-
-.palloncini-overlay-score {
-  font-size: var(--fs-lg);
-  font-weight: 700;
-  color: var(--accent-yellow);
 }
 
 /* ── Responsive tweaks ── */

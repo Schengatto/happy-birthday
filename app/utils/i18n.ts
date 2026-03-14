@@ -43,8 +43,8 @@ const it: Messages = {
   'games.missione.desc': 'Trova le decorazioni, raccogli i regali e prepara la torta!',
   'games.coppie.name': 'Apparecchia i Tavoli',
   'games.coppie.desc': 'Abbina piatti, bicchieri e decorazioni per la tavola!',
-  'games.palloncini.name': 'Decora la Sala',
-  'games.palloncini.desc': 'Cattura le decorazioni ed evita i guastafeste!',
+  'games.palloncini.name': 'Acchiappa i Palloncini',
+  'games.palloncini.desc': 'Acchiappa 5 palloncini il più velocemente possibile!',
   'games.sequenza.name': 'Ricorda la Sequenza',
   'games.sequenza.desc': 'Memorizza e ripeti la sequenza di emoji!',
   'games.regalo.name': 'Scarta i Regali',
@@ -90,7 +90,7 @@ const it: Messages = {
   /* ─── Preview: Game names ─── */
   'preview.game.missione': 'La Missione',
   'preview.game.coppie': 'Trova le Coppie',
-  'preview.game.palloncini': 'Palloncini',
+  'preview.game.palloncini': 'Acchiappa i Palloncini',
   'preview.game.sequenza': 'Ricorda la Sequenza',
   'preview.game.regalo': 'Scarta i Regali',
   'preview.game.artiglio': 'Acchiappa i Dolcetti',
@@ -116,7 +116,7 @@ const it: Messages = {
   /* ─── Viewer: GameCarousel ─── */
   'carousel.missione': '🎯 Prepara la Festa',
   'carousel.coppie': '🍽️ Apparecchia i Tavoli',
-  'carousel.palloncini': '🎀 Decora la Sala',
+  'carousel.palloncini': '🎈 Acchiappa i Palloncini',
   'carousel.sequenza': '🧠 Ricorda la Sequenza',
   'carousel.regalo': '🎁 Scarta i Regali',
   'carousel.artiglio': '🏗️ Acchiappa i Dolcetti',
@@ -166,16 +166,11 @@ const it: Messages = {
   'coppie.level3': 'La Festa Completa!',
 
   /* ─── Game: Palloncini ─── */
-  'palloncini.levelDone': 'Sala decorata!',
-  'palloncini.levelDoneSub': 'Altre decorazioni in arrivo...',
-  'palloncini.decorations': 'Decorazioni:',
+  'palloncini.title': 'Acchiappa i Palloncini',
+  'palloncini.instruction': 'Tocca i palloncini per acchiapparli! 🎈',
   'palloncini.win.M': 'Bravissimo, {name}!',
   'palloncini.win.F': 'Bravissima, {name}!',
-  'palloncini.winSub': 'La sala è decorata alla perfezione!',
-  'palloncini.winScore': 'Decorazioni raccolte:',
-  'palloncini.lose': 'I guastafeste hanno vinto!',
-  'palloncini.loseSub': 'Non preoccuparti, {name}, ritenta!',
-  'palloncini.loseScore': 'Decorazioni:',
+  'palloncini.winSub': 'Hai acchiappato tutti i palloncini!',
 
   /* ─── Game: Sequenza ─── */
   'sequenza.watch': 'Osserva la sequenza...',
@@ -348,8 +343,8 @@ const en: Messages = {
   'games.missione.desc': 'Find the decorations, collect the gifts and prepare the cake!',
   'games.coppie.name': 'Set the Tables',
   'games.coppie.desc': 'Match plates, glasses and decorations for the table!',
-  'games.palloncini.name': 'Decorate the Room',
-  'games.palloncini.desc': 'Catch the decorations and avoid the troublemakers!',
+  'games.palloncini.name': 'Catch the Balloons',
+  'games.palloncini.desc': 'Catch 5 balloons as fast as you can!',
   'games.sequenza.name': 'Remember the Sequence',
   'games.sequenza.desc': 'Memorize and repeat the emoji sequence!',
   'games.regalo.name': 'Unwrap the Gifts',
@@ -395,7 +390,7 @@ const en: Messages = {
   /* ─── Preview: Game names ─── */
   'preview.game.missione': 'The Mission',
   'preview.game.coppie': 'Find the Pairs',
-  'preview.game.palloncini': 'Balloons',
+  'preview.game.palloncini': 'Catch the Balloons',
   'preview.game.sequenza': 'Remember the Sequence',
   'preview.game.regalo': 'Unwrap the Gifts',
   'preview.game.artiglio': 'Grab the Cakes',
@@ -421,7 +416,7 @@ const en: Messages = {
   /* ─── Viewer: GameCarousel ─── */
   'carousel.missione': '🎯 Prepare the Party',
   'carousel.coppie': '🍽️ Set the Tables',
-  'carousel.palloncini': '🎀 Decorate the Room',
+  'carousel.palloncini': '🎈 Catch the Balloons',
   'carousel.sequenza': '🧠 Remember the Sequence',
   'carousel.regalo': '🎁 Unwrap the Gifts',
   'carousel.artiglio': '🏗️ Grab the Cakes',
@@ -471,16 +466,11 @@ const en: Messages = {
   'coppie.level3': 'The Full Party!',
 
   /* ─── Game: Palloncini ─── */
-  'palloncini.levelDone': 'Room decorated!',
-  'palloncini.levelDoneSub': 'More decorations incoming...',
-  'palloncini.decorations': 'Decorations:',
+  'palloncini.title': 'Catch the Balloons',
+  'palloncini.instruction': 'Tap the balloons to catch them! 🎈',
   'palloncini.win.M': 'Well done, {name}!',
   'palloncini.win.F': 'Well done, {name}!',
-  'palloncini.winSub': 'The room is perfectly decorated!',
-  'palloncini.winScore': 'Decorations collected:',
-  'palloncini.lose': 'The troublemakers won!',
-  'palloncini.loseSub': 'Don\'t worry, {name}, try again!',
-  'palloncini.loseScore': 'Decorations:',
+  'palloncini.winSub': 'You caught all the balloons!',
 
   /* ─── Game: Sequenza ─── */
   'sequenza.watch': 'Watch the sequence...',
