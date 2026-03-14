@@ -24,14 +24,14 @@ const emit = defineEmits<{
 <template>
   <div>
     <h2 class="wizard-title">{{ $t('recipient.title') }}</h2>
-    <p class="wizard-subtitle">{{ $t('recipient.subtitle') }}</p>
+    <p class="wizard-subtitle">{{ $t(`recipient.subtitle.${recipientGender}`) }}</p>
 
     <div class="field">
-      <label class="field-label">{{ $t('recipient.nameLabel') }}</label>
+      <label class="field-label">{{ $t(`recipient.nameLabel.${recipientGender}`) }}</label>
       <input
         class="field-input"
         type="text"
-        :placeholder="$t('recipient.namePlaceholder')"
+        :placeholder="$t(`recipient.namePlaceholder.${recipientGender}`)"
         maxlength="50"
         :value="recipientName"
         @input="emit('update:recipientName', ($event.target as HTMLInputElement).value)"
@@ -39,7 +39,7 @@ const emit = defineEmits<{
     </div>
 
     <div class="field">
-      <label class="field-label">{{ $t('recipient.genderLabel') }}</label>
+      <label class="field-label">{{ $t(`recipient.genderLabel.${recipientGender}`) }}</label>
       <div class="field-toggle-group">
         <button
           type="button"

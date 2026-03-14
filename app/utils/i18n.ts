@@ -21,10 +21,14 @@ const it: Messages = {
 
   /* ─── Editor: StepRecipient ─── */
   'recipient.title': 'Per chi è il biglietto?',
-  'recipient.subtitle': 'Inserisci i dettagli del festeggiato',
-  'recipient.nameLabel': 'Nome del festeggiato',
-  'recipient.namePlaceholder': 'Es. Marco',
-  'recipient.genderLabel': 'Il festeggiato è...',
+  'recipient.subtitle.M': 'Inserisci i dettagli del festeggiato',
+  'recipient.subtitle.F': 'Inserisci i dettagli della festeggiata',
+  'recipient.nameLabel.M': 'Nome del festeggiato',
+  'recipient.nameLabel.F': 'Nome della festeggiata',
+  'recipient.namePlaceholder.M': 'Es. Marco',
+  'recipient.namePlaceholder.F': 'Es. Maria',
+  'recipient.genderLabel.M': 'Il festeggiato è...',
+  'recipient.genderLabel.F': 'La festeggiata è...',
   'recipient.male': 'Maschio',
   'recipient.female': 'Femmina',
   'recipient.senderLabel': 'Il tuo nome',
@@ -83,7 +87,8 @@ const it: Messages = {
 
   /* ─── Editor: StepShare ─── */
   'share.title': 'Biglietto creato!',
-  'share.subtitle': 'Condividi il biglietto con il festeggiato',
+  'share.subtitle.M': 'Condividi il biglietto con il festeggiato',
+  'share.subtitle.F': 'Condividi il biglietto con la festeggiata',
   'share.share': 'Condividi',
   'share.shareTitle': 'Ti ho preparato un biglietto di compleanno!',
 
@@ -321,10 +326,14 @@ const en: Messages = {
 
   /* ─── Editor: StepRecipient ─── */
   'recipient.title': 'Who is the card for?',
-  'recipient.subtitle': 'Enter the birthday person\'s details',
-  'recipient.nameLabel': 'Recipient\'s name',
-  'recipient.namePlaceholder': 'E.g. Sarah',
-  'recipient.genderLabel': 'The recipient is...',
+  'recipient.subtitle.M': 'Enter the birthday boy\'s details',
+  'recipient.subtitle.F': 'Enter the birthday girl\'s details',
+  'recipient.nameLabel.M': 'Recipient\'s name',
+  'recipient.nameLabel.F': 'Recipient\'s name',
+  'recipient.namePlaceholder.M': 'E.g. John',
+  'recipient.namePlaceholder.F': 'E.g. Sarah',
+  'recipient.genderLabel.M': 'The recipient is...',
+  'recipient.genderLabel.F': 'The recipient is...',
   'recipient.male': 'Male',
   'recipient.female': 'Female',
   'recipient.senderLabel': 'Your name',
@@ -383,7 +392,8 @@ const en: Messages = {
 
   /* ─── Editor: StepShare ─── */
   'share.title': 'Card created!',
-  'share.subtitle': 'Share the card with the birthday person',
+  'share.subtitle.M': 'Share the card with the birthday boy',
+  'share.subtitle.F': 'Share the card with the birthday girl',
   'share.share': 'Share',
   'share.shareTitle': 'I made you a birthday card!',
 

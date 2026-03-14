@@ -126,6 +126,7 @@ function prev() {
       <StepShare
         v-if="step === 5"
         :card-url="cardUrl"
+        :recipient-gender="recipientGender"
       />
     </div>
 

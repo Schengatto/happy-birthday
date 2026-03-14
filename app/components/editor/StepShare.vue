@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import '~/assets/css/editor.css'
 import { ref, computed } from 'vue'
+import type { RecipientGender } from '../../../types/card'
 import { useLocale } from '~/composables/useLocale'
 
 const { $t } = useLocale()
 
 const props = defineProps<{
   cardUrl: string
+  recipientGender: RecipientGender
 }>()
 
 const copied = ref(false)
@@ -47,7 +49,7 @@ async function shareCard() {
   <div class="share-step">
     <div class="share-icon">🎉</div>
     <h2 class="wizard-title">{{ $t('share.title') }}</h2>
-    <p class="wizard-subtitle">{{ $t('share.subtitle') }}</p>
+    <p class="wizard-subtitle">{{ $t(`share.subtitle.${recipientGender}`) }}</p>
 
     <div class="preview-url-box">
       <span class="preview-url-text">{{ cardUrl }}</span>

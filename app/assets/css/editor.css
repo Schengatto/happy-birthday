@@ -15,6 +15,13 @@
   backdrop-filter: blur(12px);
   background: rgba(255, 255, 255, 0.15);
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  display: none;
+}
+
+@media (min-width: 480px) {
+  .layout-header {
+    display: block;
+  }
 }
 
 .layout-logo {
@@ -31,9 +38,15 @@
   flex-direction: column;
   align-items: center;
   justify-content: safe center;
-  padding: clamp(0.5rem, 2vw, 1.25rem);
+  padding: 0;
   overflow-y: auto;
   min-height: 0;
+}
+
+@media (min-width: 480px) {
+  .layout-main {
+    padding: clamp(0.5rem, 2vw, 1.25rem);
+  }
 }
 
 .layout-footer {
@@ -44,26 +57,42 @@
   backdrop-filter: blur(8px);
   background: rgba(255, 255, 255, 0.08);
   flex-shrink: 0;
+  display: none;
+}
+
+@media (min-width: 480px) {
+  .layout-footer {
+    display: block;
+  }
 }
 
 /* ─── Wizard Card ─── */
 .wizard {
   width: 100%;
-  max-width: 560px;
   max-height: 100%;
   background: var(--card-bg);
-  backdrop-filter: blur(20px);
-  border-radius: var(--radius-lg);
-  box-shadow:
-    0 4px 24px rgba(0, 0, 0, 0.08),
-    0 1px 2px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: clamp(1rem, 3vw, 2rem);
+  padding: 1rem;
   animation: fadeInScale 0.4s ease;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  flex: 1;
+}
+
+@media (min-width: 480px) {
+  .wizard {
+    max-width: 560px;
+    flex: initial;
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    border-radius: var(--radius-lg);
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.08),
+      0 1px 2px rgba(0, 0, 0, 0.04),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: clamp(1rem, 3vw, 2rem);
+  }
 }
 
 /* ─── Step Indicator (Stepper) ─── */

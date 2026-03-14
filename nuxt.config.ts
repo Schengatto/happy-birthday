@@ -16,6 +16,9 @@ export default defineNuxtConfig({
       display: 'standalone',
       orientation: 'portrait',
       lang: 'it',
+      start_url: '/',
+      scope: '/',
+      categories: ['entertainment', 'social'],
       icons: [
         {
           src: 'pwa-64x64.png',
@@ -41,7 +44,7 @@ export default defineNuxtConfig({
       ],
     },
     workbox: {
-      navigateFallback: undefined,
+      navigateFallback: '/',
       globPatterns: ['**/*.{js,css,html,png,svg,ico,woff2}'],
     },
     client: {
@@ -92,6 +95,7 @@ export default defineNuxtConfig({
     '~/assets/css/main.css',
     '~/assets/css/themes.css',
     '~/assets/css/keyframes.css',
+    '~/assets/css/pwa.css',
   ],
 
   nitro: {
