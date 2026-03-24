@@ -44,13 +44,8 @@ export default defineEventHandler(async (event) => {
   }
 
   const id = nanoid(10)
-  try {
-    const sql = useDb()
-    await sql('INSERT INTO cards (id, config) VALUES ($1, $2)', [id, JSON.stringify(config)])
-  } catch (err: any) {
-    console.error('DB INSERT error:', err)
-    throw createError({ statusCode: 500, statusMessage: err?.message || 'Errore database' })
-  }
+  const sql = useDb()
+  await sql`INSERT INTO cards (id, config) VALUES (${id}, ${JSON.stringify(config)})`
 
   return { id }
 })

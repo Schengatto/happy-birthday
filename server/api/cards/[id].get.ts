@@ -8,11 +8,11 @@ export default defineEventHandler(async (event) => {
   }
 
   const sql = useDb()
-  const rows = await sql('SELECT config FROM cards WHERE id = $1', [id])
+  const rows = await sql`SELECT config FROM cards WHERE id = ${id}` as Record<string, any>[]
 
   if (rows.length === 0) {
     throw createError({ statusCode: 404, statusMessage: 'Biglietto non trovato' })
   }
 
-  return rows[0].config
+  return rows[0]!.config
 })
