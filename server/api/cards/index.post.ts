@@ -1,5 +1,6 @@
 import { nanoid } from 'nanoid'
 import type { CardConfig } from '../../../types/card'
+import { useDb } from '../../utils/db'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody<CardConfig>(event)
@@ -43,8 +44,8 @@ export default defineEventHandler(async (event) => {
   }
 
   const id = nanoid(10)
-  const storage = useStorage('cards')
-  await storage.setItem(id, config)
+  const sql = useDb()
+  await sql('INSERT INTO cards (id, config) VALUES ($1, $2)', [id, JSON.stringify(config)])
 
   return { id }
 })

@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
     "@vite-pwa/nuxt": "^1.1.1",
     "nanoid": "5.1.6",
     "nuxt": "4.4.2",
